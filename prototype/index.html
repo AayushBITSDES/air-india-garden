@@ -91,8 +91,8 @@ a{color:inherit}
 .alertbar a{color:#2160C7;font-size:12px;text-decoration:underline}
 .site{background:#fff;position:sticky;top:0;z-index:30;box-shadow:0 1px 3px rgba(30,41,59,.1),0 1px 2px rgba(30,41,59,.05)}
 .site .wrap{display:flex;align-items:center;justify-content:space-between;height:80px}
-.wordmark{position:relative;font-family:var(--display);color:var(--red);font-size:18.5px;line-height:1;letter-spacing:.01em;text-decoration:none;white-space:nowrap;padding:12px 22px 4px 0}
-.wordmark svg{position:absolute;right:0;top:0;width:20px;height:36px}
+.wordmark{display:block;color:var(--red);line-height:0}
+.wordmark svg{width:137px;height:32px}
 .hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:9px;padding-top:4px}
 .hdr-util{display:flex;align-items:center;gap:16px;font-family:var(--display);font-size:9px;letter-spacing:.01em;color:#000;height:23px}
 .hdr-util a{display:flex;align-items:center;gap:7px;text-decoration:none;white-space:nowrap}
@@ -192,7 +192,7 @@ a{color:inherit}
 .bp .k{display:block;font-size:max(7px,1.05cqw);font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#7A7F8A}
 .bp .v{display:block;font-size:1.95cqw;font-weight:800;color:#25272C;letter-spacing:.01em;white-space:nowrap;margin-top:.15cqw}
 .bp-band-wm{top:0;height:4.36cqw;display:flex;align-items:center;gap:.5cqw;font-family:var(--display);color:#fff;font-size:1.55cqw;letter-spacing:.02em}
-.bp-band-wm svg{width:1.4cqw;height:2.5cqw;margin-top:-.9cqw}
+.bp-band-wm svg{width:12.4cqw;height:2.9cqw;color:#fff}
 .bp-band-cls{top:0;height:4.36cqw;display:flex;align-items:center;font-family:var(--display);color:#fff;font-size:.95cqw;letter-spacing:.08em}
 .bp-saf{top:.95cqw;height:2.45cqw;display:flex;align-items:center;padding:0 .8cqw;border-radius:.4cqw;font-size:.95cqw;font-weight:800;letter-spacing:.07em;
   text-transform:uppercase;color:#5B3A10;background:linear-gradient(135deg,#FED9A0,#EBBE69)}
@@ -215,7 +215,7 @@ a{color:inherit}
 .bp-stub .btn{margin-top:1.8cqw;padding:1cqw 1.4cqw;font-size:1.35cqw;width:100%}
 .bp-stub .lockline{font-size:1.15cqw;margin-top:.8cqw;justify-content:flex-start}
 .bp-stub-wm{right:2.4cqw;bottom:1.6cqw;display:flex;align-items:flex-end;gap:.3cqw;font-family:var(--display);color:var(--red);font-size:1.25cqw}
-.bp-stub-wm svg{width:1.1cqw;height:2cqw}
+.bp-stub-wm svg{width:10.2cqw;height:2.4cqw;color:var(--red)}
 .lockline{display:flex;align-items:center;gap:6px;justify-content:center;font-size:12px;color:var(--gold-dk);font-weight:700;margin-top:8px}
 .lockline svg{width:14px;height:14px}
 .side-actions{display:flex;flex-direction:column;gap:12px}
@@ -223,15 +223,21 @@ a{color:inherit}
 .infocard p{font-size:14px;margin:8px 0 0}
 
 /* Trips page */
-.toast{position:fixed;top:16px;right:24px;width:380px;background:#fff;border-radius:12px;box-shadow:0 20px 60px rgba(37,39,44,.25);padding:16px 16px 14px;z-index:60;
-  border-left:4px solid var(--red);transform:translateX(120%);transition:transform .45s cubic-bezier(.2,.9,.3,1)}
+.toast{position:fixed;top:132px;right:max(24px,calc((100vw - 1232px)/2));width:400px;z-index:60;display:grid;grid-template-columns:40px 1fr auto;gap:2px 12px;align-items:center;
+  padding:14px 14px 14px 14px;border-radius:18px;background:rgba(250,250,250,.86);backdrop-filter:blur(24px) saturate(1.6);-webkit-backdrop-filter:blur(24px) saturate(1.6);
+  border:1px solid rgba(0,0,0,.06);box-shadow:0 10px 40px rgba(37,39,44,.18),0 1px 3px rgba(37,39,44,.08);
+  transform:translateX(calc(100% + 48px));transition:transform .5s cubic-bezier(.2,.9,.3,1)}
 .toast.show{transform:none}
-.toast .src{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--g500)}
-.toast .src .appicon{width:22px;height:22px;border-radius:6px;background:var(--red);display:grid;place-items:center}
-.toast .src .appicon i{display:block;width:6px;height:10px;border-right:2px solid var(--gold);border-top:2px solid var(--gold);border-radius:0 6px 0 0;transform:skewX(-14deg)}
-.toast h4{margin:8px 0 2px;font-size:15px;color:var(--g900)}
-.toast p{margin:0 0 10px;font-size:13px}
-.toast .x{position:absolute;top:10px;right:12px;background:none;border:0;color:var(--g400);font-size:18px;line-height:1}
+.toast .appicon{grid-row:1 / span 3;align-self:start;width:40px;height:40px;border-radius:10px;display:grid;place-items:center;
+  background:linear-gradient(145deg,#E3122F,#A50D35);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+.toast .appicon svg{width:24px;height:24px}
+.toast .src{display:flex;justify-content:space-between;font-size:12px;color:#6B6F78;line-height:1.3}
+.toast h4{margin:0;font-size:14px;font-weight:800;color:#1C1D21;line-height:1.3}
+.toast p{margin:0;font-size:13px;color:#383C42;line-height:1.35}
+.toast .acts{grid-column:2 / span 2;display:flex;gap:8px;margin-top:10px}
+.toast .acts button{flex:1;height:32px;border-radius:8px;border:0;font-size:13px;font-weight:700}
+.toast .acts .primary{background:var(--red);color:#fff}
+.toast .acts .ghost{background:rgba(0,0,0,.06);color:#383C42}
 .trip{display:grid;grid-template-columns:1fr 380px;overflow:hidden;margin-bottom:20px}
 .trip-main{padding:24px 28px}
 .trip-top{display:flex;gap:12px;align-items:center;margin-bottom:16px}
@@ -242,12 +248,13 @@ a{color:inherit}
 .trip-route .mid::before,.trip-route .mid::after{content:"";flex:1;border-top:1.5px dashed var(--g300)}
 .trip-meta{display:flex;gap:28px;margin-top:18px;font-size:13px;color:var(--g500)}
 .trip-meta b{color:var(--g900);display:block;font-size:14px}
-.trip-tree{background:linear-gradient(160deg,var(--cream),#FBEDE3);display:flex;gap:16px;align-items:center;padding:20px 24px;border-left:1px solid #EEDFC2}
-.trip-tree svg.thumb{width:110px;height:120px;flex:0 0 auto}
-.trip-tree h4{margin:6px 0 4px;font-size:17px;color:var(--g900)}
+.trip-tree{background:var(--cream);display:flex;gap:20px;align-items:center;padding:24px;border-left:1px solid #EEDFC2}
+.trip-tree svg.thumb{width:104px;height:116px;flex:0 0 auto;padding:10px 8px 6px;border-radius:12px;border:1px solid #EEDFC2;overflow:visible;
+  background:radial-gradient(48% 9% at 50% 93%,rgba(94,70,48,.2),transparent 100%),linear-gradient(180deg,#FFFFFF,#FBF7EE)}
+.trip-tree h4{margin:6px 0 4px;font-size:17px;color:var(--g900);line-height:1.3}
 .trip-tree p{margin:0 0 12px;font-size:13px}
-.trip.past{opacity:.92}
 .trip.past .trip-tree{background:var(--g50);border-left-color:var(--g100)}
+.trip.past .trip-tree svg.thumb{border-color:var(--g100);background:radial-gradient(48% 9% at 50% 93%,rgba(94,70,48,.16),transparent 100%),#fff}
 
 /* Garden page: full screen scene with floating panels */
 #p-garden{padding:0}
@@ -257,13 +264,13 @@ a{color:inherit}
 #garden3d canvas{display:block;width:100%;height:100%;touch-action:none}
 .panel{position:absolute;top:24px;background:rgba(255,255,255,.88);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px) saturate(1.2);
   border-radius:12px;box-shadow:var(--shadow-lg);border:1px solid rgba(255,255,255,.7)}
-.panel-left{left:max(24px,calc((100vw - 1232px)/2));width:360px;padding:22px 24px}
+.panel-left{left:max(24px,calc((100vw - 1232px)/2));width:360px;padding:24px 28px}
 .panel-right{right:max(24px,calc((100vw - 1232px)/2));width:360px;overflow:hidden}
-.panel .big{font-family:var(--display);font-size:40px;color:var(--red);line-height:1.1;margin:16px 0 0}
+.panel .big{font-family:var(--display);font-size:40px;color:var(--red);line-height:1.1;margin:20px 0 0}
 .panel .big small{display:block;font-family:var(--body);font-size:16px;font-weight:700;color:var(--g800);margin-top:6px}
-.panel .compare{font-size:15px;color:var(--g900);font-weight:700;margin:10px 0 4px}
+.panel .compare{font-size:15px;color:var(--g900);font-weight:700;margin:16px 0 6px;line-height:1.45}
 .panel .share{font-size:13px;color:var(--g500);margin:0}
-details.how-count{margin-top:14px;border-top:1px solid var(--g100);padding-top:12px}
+details.how-count{margin-top:20px;border-top:1px solid var(--g100);padding-top:16px}
 details.how-count summary{list-style:none;cursor:pointer;color:var(--red);font-weight:700;font-size:14px}
 details.how-count summary::-webkit-details-marker{display:none}
 details.how-count summary::after{content:" +"}
@@ -278,7 +285,7 @@ details.how-count .fc b{color:var(--g900)}
 .member-card .stat{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.75)}
 .member-card .stat b{display:block;font-family:var(--display);font-size:17px;letter-spacing:0;color:#fff;margin-top:4px;font-weight:400}
 .member-card .stat b.gold{color:var(--gold)}
-.apples{padding:16px 20px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--g100)}
+.apples{padding:18px 20px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--g100)}
 .apples .ico{width:40px;height:44px;flex:0 0 auto}
 .apples .n{font-family:var(--display);font-size:28px;color:var(--g900);line-height:1;font-variant-numeric:tabular-nums;display:inline-block}
 .apples .n.bump{animation:bump .25s ease}
@@ -286,22 +293,27 @@ details.how-count .fc b{color:var(--g900)}
 .apples .l{font-size:13px;color:var(--g500)}
 .apples .acts{margin-left:auto}
 .apples .acts .btn{padding:10px 18px;font-size:14px}
-.coll{padding:14px 20px 18px}
-.coll .hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.chips{display:flex;gap:6px;flex-wrap:nowrap}
-.chip{width:40px;height:46px;flex:0 0 auto;border-radius:8px;background:var(--cream);border:1px solid #EEDFC2;padding:2px;position:relative}
-.chip:hover{border-color:var(--red)}
-.chip svg{width:100%;height:100%}
-.chip.rare{background:linear-gradient(160deg,#FFF6E0,#FED9A0)}
-.chip.ripe::after{content:"";position:absolute;top:3px;right:3px;width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 0 2px #fff}
-.chip.empty{background:var(--g50);border:1px dashed var(--g300);display:grid;place-items:center;color:var(--g400);font-size:18px}
+.coll{padding:18px 20px 20px}
+.coll .hd{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+.chips{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.chip{position:relative;height:86px;border-radius:10px;border:1px solid #EEDFC2;padding:6px 4px 7px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  background:radial-gradient(42% 7% at 50% 74%,rgba(94,70,48,.18),transparent 100%),linear-gradient(180deg,#fff,#FBF7EE);transition:border-color .15s,transform .15s,box-shadow .15s}
+.chip:hover{border-color:var(--gold-dk);transform:translateY(-2px);box-shadow:0 6px 16px rgba(37,39,44,.1)}
+.chip svg{width:100%;height:56px;flex:0 0 auto}
+.chip .city{font-size:10.5px;font-weight:700;color:var(--g600);margin-top:4px;line-height:1;white-space:nowrap}
+.chip.rare{border-color:#E6C27E;background:radial-gradient(42% 7% at 50% 74%,rgba(94,70,48,.18),transparent 100%),linear-gradient(180deg,#FFF8E6,#FCE6B8)}
+.chip.ripe::after{content:"";position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 0 2px #fff}
+.chip.empty{background:transparent;border:1px dashed var(--g300);justify-content:center;gap:6px;color:var(--g400)}
+.chip.empty b{font-size:20px;font-weight:400;line-height:1}
+.chip.empty .city{color:var(--g400);font-weight:600}
 .garden-hint{position:absolute;left:50%;bottom:86px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.94);
   border-radius:999px;padding:10px 18px;font-size:14px;color:var(--g800);font-weight:700;box-shadow:var(--shadow-lg);white-space:nowrap}
-.planet{display:flex;gap:14px;align-items:center;margin-top:14px;padding-top:14px;border-top:1px solid var(--g100)}
-.planet .globe{width:76px;height:76px;flex:0 0 auto;border-radius:50%;background:radial-gradient(circle at 50% 50%,rgba(124,196,255,.18),transparent 70%)}
+.planet{display:grid;grid-template-columns:56px 1fr;gap:4px 16px;align-items:center;margin-top:20px;padding-top:20px;border-top:1px solid var(--g100)}
+.planet .globe{grid-row:1 / span 2;width:56px;height:56px;flex:0 0 auto;border-radius:50%;background:radial-gradient(circle at 50% 50%,rgba(124,196,255,.18),transparent 70%)}
 .planet .eyebrow{font-size:10.5px}
-.planet .n{font-family:var(--display);font-size:16px;color:var(--g900);line-height:1.2;white-space:nowrap;margin-top:2px;font-variant-numeric:tabular-nums}
-.planet .l{font-size:12.5px;color:var(--g600);margin-top:3px;line-height:1.4}
+.planet .n{font-family:var(--display);font-size:15px;color:var(--g900);line-height:1.2;white-space:nowrap;margin-top:4px;font-variant-numeric:tabular-nums}
+.planet .l{grid-column:1 / -1;font-size:13px;color:var(--g600);margin-top:12px;line-height:1.5}
+.planet .l b{color:var(--g900)}
 #earthIntro{position:fixed;inset:0;z-index:200;display:none;color:#fff;
   background:radial-gradient(60% 60% at 50% 42%,#26103A 0%,#120820 55%,#06030C 100%)}
 #earthIntro.on{display:block}
@@ -433,7 +445,11 @@ body.full .foot{display:none}
     <linearGradient id="vistaGold" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#F7E2BC"/><stop offset=".45" stop-color="#D9AE6E"/><stop offset="1" stop-color="#9A713E"/>
     </linearGradient>
-    <!-- Vista: drawn approximation of the gold window peak, not the official artwork -->
+    <!-- Air India logo, from airindia.com (dmlib.airindia.com AI_Logo_Red_New.svg). Letters use currentColor. -->
+    <linearGradient id="aiVistaGrad" x1="148.721" y1="45.4234" x2="115.402" y2="0.306412" gradientUnits="userSpaceOnUse"><stop offset="0.1805" stop-color="#FED9A0"/><stop offset="0.3124" stop-color="#ECC890"/><stop offset="0.5738" stop-color="#BF9A66"/><stop offset="0.7464" stop-color="#9E7947"/></linearGradient>
+    <symbol id="aiLogo" viewBox="0 0 137 32"><g fill="currentColor"><path d="M41.5617 22.7969C42.8433 22.0612 43.6589 20.6734 43.6589 18.9846C43.6589 15.2393 40.9792 14.002 36.2355 14.002H27.9965V26.6928H32.0411V24.0342H36.2521C36.8846 24.0342 37.4838 24.0008 38.0331 23.9339C38.7821 24.6696 39.4312 25.8568 39.6975 26.6761H43.8919C43.4425 25.3217 42.5604 23.7165 41.5617 22.7969ZM36.4352 21.1081H32.0411V16.928H36.4352C38.5657 16.928 39.7808 17.3126 39.7808 18.9846C39.7641 20.6734 38.5657 21.1081 36.4352 21.1081Z"/><path d="M24.7342 14.002H20.6896V26.6928H24.7342V14.002Z"/><path d="M57.324 14.002H53.2794V26.6928H57.324V14.002Z"/><path d="M102.647 14.002H98.6021V26.6928H102.647V14.002Z"/><path d="M88.0662 14.002H80.0769V26.6928H88.0662C92.7599 26.6928 96.2219 24.5693 96.2219 20.339C96.2219 16.1087 92.7599 14.002 88.0662 14.002ZM87.5835 23.6664H84.1215V17.0284H87.5835C90.5961 17.0284 92.194 18.0985 92.194 20.339C92.194 22.5795 90.5961 23.6664 87.5835 23.6664Z"/><path d="M72.9364 19.7872C70.523 17.0785 67.6102 15.1222 63.9984 14.002H60.5696V26.6928H64.4478V18.1152C68.1428 19.3191 71.5549 23.0979 73.236 26.6928H76.7979V14.002H72.9198V19.7872H72.9364Z"/><path d="M7.04121 14.002C4.37811 17.0284 0.633118 22.1281 0.633118 26.6928H4.66106C4.66106 26.0072 4.74429 25.305 4.91073 24.6194H14.0818C14.2482 25.3217 14.3315 26.0072 14.3315 26.6928H18.3594C18.3594 22.1281 14.6144 17.0284 11.9513 14.002H7.04121ZM5.82617 21.9442C6.80819 19.7872 8.23961 17.7808 9.48794 16.3261C10.7363 17.7808 12.1677 19.7872 13.1497 21.9442H5.82617Z"/><path d="M116.295 14.002H111.385C108.722 17.0284 104.977 22.1281 104.977 26.6928H109.005C109.005 26.0072 109.088 25.305 109.255 24.6194H118.426C118.592 25.3217 118.675 26.0072 118.675 26.6928H122.703C122.703 22.1114 118.958 17.0284 116.295 14.002ZM110.17 21.9442C111.152 19.7872 112.583 17.7808 113.832 16.3261C115.08 17.7808 116.511 19.7872 117.493 21.9442H110.17Z"/></g><path d="M136.884 22.0276C137.217 19.5529 136.618 17.4127 136.119 16.0082C135.769 15.0217 135.486 14.2358 135.236 13.5336C134.105 10.34 133.888 9.75477 133.106 6.56116L132.84 5.50778L131.808 5.17337C128.679 4.15342 128.129 3.90261 125.033 2.51482C124.351 2.21385 123.585 1.86272 122.637 1.44471C121.521 0.959816 119.824 0.290997 117.776 0.224116C114.631 0.107073 111.618 1.39455 108.805 4.03638L108.855 4.01966C108.139 4.65503 107.407 5.39073 106.658 6.24348C106.658 6.24348 106.675 6.29364 106.841 6.15987C107.823 5.35729 111.035 2.34761 119.774 6.29364C124.068 8.23321 128.196 9.95542 128.196 9.95542C128.196 9.95542 129.544 14.2191 131.092 18.7002C134.238 27.7794 130.975 30.7389 130.093 31.6418C129.96 31.7923 130.01 31.809 130.01 31.809C131.275 30.8894 132.29 29.9698 133.139 29.0669C135.27 26.9099 136.535 24.5524 136.884 22.0276Z" fill="url(#aiVistaGrad)"/><path d="M132.856 5.47457L131.824 5.14016C128.695 4.12022 128.146 3.86941 125.05 2.48161C124.368 2.18065 123.602 1.82952 122.653 1.4115C121.538 0.926612 119.84 0.257794 117.793 0.190913C114.647 0.0738694 111.635 1.36134 108.822 4.00317L108.872 3.98645C108.156 4.62183 107.424 5.35753 106.675 6.21027C106.675 6.21027 106.691 6.26044 106.858 6.12667C107.84 5.32409 111.052 2.31441 119.79 6.26044C124.085 8.20001 128.212 9.92221 128.212 9.92221L132.856 5.47457Z" fill="#FED9A0"/></symbol>
+    <symbol id="aiVista" viewBox="104 -1 34 34"><path d="M136.884 22.0276C137.217 19.5529 136.618 17.4127 136.119 16.0082C135.769 15.0217 135.486 14.2358 135.236 13.5336C134.105 10.34 133.888 9.75477 133.106 6.56116L132.84 5.50778L131.808 5.17337C128.679 4.15342 128.129 3.90261 125.033 2.51482C124.351 2.21385 123.585 1.86272 122.637 1.44471C121.521 0.959816 119.824 0.290997 117.776 0.224116C114.631 0.107073 111.618 1.39455 108.805 4.03638L108.855 4.01966C108.139 4.65503 107.407 5.39073 106.658 6.24348C106.658 6.24348 106.675 6.29364 106.841 6.15987C107.823 5.35729 111.035 2.34761 119.774 6.29364C124.068 8.23321 128.196 9.95542 128.196 9.95542C128.196 9.95542 129.544 14.2191 131.092 18.7002C134.238 27.7794 130.975 30.7389 130.093 31.6418C129.96 31.7923 130.01 31.809 130.01 31.809C131.275 30.8894 132.29 29.9698 133.139 29.0669C135.27 26.9099 136.535 24.5524 136.884 22.0276Z" fill="url(#aiVistaGrad)"/><path d="M132.856 5.47457L131.824 5.14016C128.695 4.12022 128.146 3.86941 125.05 2.48161C124.368 2.18065 123.602 1.82952 122.653 1.4115C121.538 0.926612 119.84 0.257794 117.793 0.190913C114.647 0.0738694 111.635 1.36134 108.822 4.00317L108.872 3.98645C108.156 4.62183 107.424 5.35753 106.675 6.21027C106.675 6.21027 106.691 6.26044 106.858 6.12667C107.84 5.32409 111.052 2.31441 119.79 6.26044C124.085 8.20001 128.212 9.92221 128.212 9.92221L132.856 5.47457Z" fill="#FED9A0"/></symbol>
+    <!-- (legacy) drawn vista, unused -->
     <symbol id="vista" viewBox="0 0 30 54"><path d="M1 22C7 13 14 9 22 8.5l2.3.6C28.5 18 30 33 26.5 52 25.6 41 23.6 30 19.6 22.5 14 20.5 7.5 20.4 1 22Z" fill="url(#vistaGold)"/><path d="M22 8.5l2.3.6c-1 2.5-2.6 4.4-4.7 13.4-.6-5.1.3-10 2.4-14Z" fill="#B98B4E" opacity=".55"/></symbol>
     <linearGradient id="goldFrame" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#FED9A0"/><stop offset=".35" stop-color="#C9962F"/>
@@ -452,10 +468,19 @@ body.full .foot{display:none}
     </pattern>
     <clipPath id="winClip"><path id="winClipPath"/></clipPath>
     <symbol id="apple" viewBox="-12 -14 24 26">
-      <path d="M0 -6 C-3 -9 -10 -8 -10 0 C-10 7 -5 11 -2 10 C-1 9.6 1 9.6 2 10 C5 11 10 7 10 0 C10 -8 3 -9 0 -6Z" fill="#D21E34"/>
-      <path d="M-6 -3 C-7 0 -6 3 -4 4" stroke="#F6B1A8" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-      <path d="M0 -6 C0 -9 1 -11 2 -12" stroke="#5E4630" stroke-width="1.4" fill="none" stroke-linecap="round"/>
-      <path d="M1 -10 C4 -13 8 -12 9 -10 C6 -8 3 -8 1 -10Z" fill="#4A8A57"/>
+      <defs>
+        <radialGradient id="appleSkin" cx=".34" cy=".32" r=".78">
+          <stop offset="0" stop-color="#FF6A63"/><stop offset=".42" stop-color="#DA1A30"/><stop offset=".85" stop-color="#A30F25"/><stop offset="1" stop-color="#7E0B1D"/>
+        </radialGradient>
+        <radialGradient id="appleShine" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+        <linearGradient id="appleLeaf" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#3E7A3E"/><stop offset="1" stop-color="#7DB862"/></linearGradient>
+      </defs>
+      <path d="M0 -5.2C-2.2 -7.4 -6.3 -7.9 -8.7 -5.6C-11.5 -3 -11.1 2.7 -8.7 6.5C-6.9 9.4 -4.4 11 -2.2 10.3C-1 9.9 1 9.9 2.2 10.3C4.4 11 6.9 9.4 8.7 6.5C11.1 2.7 11.5 -3 8.7 -5.6C6.3 -7.9 2.2 -7.4 0 -5.2Z" fill="url(#appleSkin)"/>
+      <ellipse cx="0" cy="-5" rx="2.6" ry="1.1" fill="#5E0A16" opacity=".35"/>
+      <ellipse cx="-5.4" cy="-1.6" rx="1.9" ry="3.6" transform="rotate(18 -5.4 -1.6)" fill="url(#appleShine)"/>
+      <path d="M0 -4.8C.1 -7.6 .9 -10.2 2.3 -12" stroke="#5B3B22" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+      <path d="M1.5 -9.4C3.2 -12.7 7.5 -13.3 9.7 -11.2C7.9 -8.5 4 -7.9 1.5 -9.4Z" fill="url(#appleLeaf)"/>
+      <path d="M2 -9.6C4.4 -10.6 6.8 -11 9 -11.1" stroke="#2F5E30" stroke-width=".5" fill="none" opacity=".7"/>
     </symbol>
   </defs>
 </svg>
@@ -466,7 +491,7 @@ body.full .foot{display:none}
 </div></div>
 <header class="site">
   <div class="wrap">
-    <a class="wordmark" href="#" onclick="go(0);return false" aria-label="Air India home">AIR INDIA<svg viewBox="0 0 30 54"><use href="#vista"/></svg></a>
+    <a class="wordmark" href="#" onclick="go(0);return false" aria-label="Air India home"><svg viewBox="0 0 137 32"><use href="#aiLogo"/></svg></a>
     <div class="hdr-right">
       <div class="hdr-util">
         <a href="#"><svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6zM14 3v4h4M9 12h6M9 16h6"/></svg>TARIFF</a>
@@ -617,7 +642,7 @@ body.full .foot{display:none}
             <line x1="578" y1="34" x2="578" y2="300" stroke="#C3C7CE" stroke-width="1.2" stroke-dasharray="4 4"/>
           </svg>
 
-          <div class="bp-l bp-band-wm" style="left:33.5cqw">AIR INDIA<svg viewBox="0 0 30 54"><use href="#vista"/></svg></div>
+          <div class="bp-l bp-band-wm" style="left:33cqw"><svg viewBox="0 0 137 32"><use href="#aiLogo"/></svg></div>
           <div class="bp-l bp-band-cls" style="left:51.5cqw">ECONOMY</div>
           <div class="bp-l bp-saf" style="left:61.4cqw">Sustainable fare</div>
           <div class="bp-l bp-band-cls" style="left:76.2cqw">ECONOMY</div>
@@ -645,7 +670,7 @@ body.full .foot{display:none}
           <div class="bp-l bp-fine" style="left:30.5cqw;bottom:2cqw">Gate closes 20 minutes before departure</div>
 
           <div class="bp-l bp-stub" id="stub"></div>
-          <div class="bp-l bp-stub-wm">AIR INDIA<svg viewBox="0 0 30 54"><use href="#vista"/></svg></div>
+          <div class="bp-l bp-stub-wm"><svg viewBox="0 0 137 32"><use href="#aiLogo"/></svg></div>
         </div>
       </div>
       <aside class="c4">
@@ -682,7 +707,7 @@ body.full .foot{display:none}
         <div class="trip-meta"><div>Seat<b>14A</b></div><div>Booking ref<b>QX7R2M</b></div><div>Maharaja Points<b>Posting in 3 days</b></div></div>
       </div>
       <div class="trip-tree">
-        <svg class="thumb" viewBox="-100 -200 200 210" id="tripTree"></svg>
+        <svg class="thumb" viewBox="-92 -188 184 196" id="tripTree"></svg>
         <div>
           <span class="eyebrow">Ready to plant</span>
           <h4>Your banyan is waiting</h4>
@@ -702,19 +727,13 @@ body.full .foot{display:none}
         </div>
       </div>
       <div class="trip-tree">
-        <svg class="thumb" viewBox="-100 -200 200 210" id="tripTree2"></svg>
+        <svg class="thumb" viewBox="-92 -188 184 196" id="tripTree2"></svg>
         <div><span class="eyebrow" style="color:var(--g500)">Planted</span><h4>Date palm</h4><button class="link" data-receipt="dxb">View receipt ›</button></div>
       </div>
     </div>
   </div>
 
-  <div class="toast" id="toast" role="status">
-    <button class="x" aria-label="Dismiss" onclick="this.parentElement.classList.remove('show')">×</button>
-    <div class="src"><span class="appicon"><i></i></span>Air India · now</div>
-    <h4>Welcome to Bengaluru</h4>
-    <p>You have landed. Your banyan is ready to plant in your garden.</p>
-    <button class="btn btn-primary" style="padding:8px 16px;font-size:13px" onclick="plantNow()">Plant now</button>
-  </div>
+
 </main>
 
 <!-- ============ 4. GARDEN (full screen) ============ -->
@@ -731,11 +750,8 @@ body.full .foot{display:none}
       <p class="share" id="co2Share"></p>
       <div class="planet">
         <div class="globe" id="planetGlobe" aria-hidden="true"></div>
-        <div>
-          <div class="eyebrow">Your share of the planet</div>
-          <div class="n" id="planetPct"></div>
-          <div class="l" id="planetLbl"></div>
-        </div>
+        <div><div class="eyebrow">Your share of the planet</div><div class="n" id="planetPct"></div></div>
+        <div class="l" id="planetLbl"></div>
       </div>
       <details class="how-count"><summary>How we count this</summary><div class="fc" id="formula"></div></details>
     </div>
@@ -837,6 +853,14 @@ body.full .foot{display:none}
   </div>
   <div class="legal">Concept prototype for a design jury. Not an Air India product. All figures are illustrative.</div>
 </div></footer>
+
+<div class="toast" id="toast" role="status">
+    <span class="appicon"><svg viewBox="0 0 34 34"><use href="#aiVista" width="34" height="34"/></svg></span>
+    <div class="src" style="grid-column:2 / span 2"><span>Air India</span><span>now</span></div>
+    <h4 style="grid-column:2 / span 2">Welcome to Bengaluru</h4>
+    <p style="grid-column:2 / span 2">You have landed. Your banyan is ready to plant.</p>
+    <div class="acts"><button class="ghost" onclick="this.closest('.toast').classList.remove('show')">Later</button><button class="primary" onclick="plantNow()">Plant now</button></div>
+  </div>
 
 <!-- Receipt drawer -->
 <div class="scrim" id="scrim"></div>
@@ -1060,7 +1084,7 @@ function renderImpact(){
   document.getElementById('planetPct').textContent = planet.toFixed(digits) + '%';
   const parts = WORLD_CO2_KG_YEAR / kg;
   const big = parts >= 1e9 ? `${Math.round(parts / 1e9)} billion` : parts >= 1e6 ? `${Math.round(parts / 1e6)} million` : fmt(parts);
-  document.getElementById('planetLbl').textContent = `of this year's CO2 from the whole world. Small, but real: 1 part in ${big}.`;
+  document.getElementById('planetLbl').innerHTML = `of all the CO2 the world puts out this year. That is <b>1 part in ${big}</b>: small, but real.`;
   document.getElementById('formula').innerHTML =
     `<b>Fossil jet fuel</b> gives off 3.16 kg of CO2 per kg burned. At 0.8 kg per litre, that is 2.53 kg per litre.<br>` +
     `<b>Sustainable fuel from used cooking oil</b> has about 80% lower lifecycle CO2, so each litre that replaces fossil fuel avoids about 2.0 kg.<br>` +
@@ -1136,8 +1160,8 @@ function renderCollection(){
   document.getElementById('collCount').textContent = `${planted.length} trees · ${PLOTS.length} plots free`;
   document.getElementById('collList').innerHTML = [...planted].reverse().map(t =>
     `<button class="chip${t.rare ? ' rare' : ''}${!t.harvested ? ' ripe' : ''}" data-receipt="${t.id}" title="${t.name}, ${t.city}">
-      <svg viewBox="-100 -200 200 210">${treeSVG(t).svg}</svg></button>`).join('') +
-    PLOTS.map(() => `<button class="chip empty" title="Book a sustainable fare to plant here" onclick="go(0)">+</button>`).join('');
+      <svg viewBox="-92 -188 184 196">${treeSVG(t).svg}</svg><span class="city">${t.city}</span></button>`).join('') +
+    PLOTS.map(() => `<button class="chip empty" title="Book a sustainable fare to plant here" onclick="go(0)"><b>+</b><span class="city">Free plot</span></button>`).join('');
   document.querySelectorAll('#collList [data-receipt]').forEach(b => b.addEventListener('click', () => openReceipt(b.dataset.receipt)));
 }
 
