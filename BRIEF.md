@@ -1,9 +1,9 @@
 # Air India sustainable-fare garden: brief
 
-Shared brief for the prototype and the deck. Every decision below is settled; do not reopen them.
+Shared brief for the prototype. Every decision below is settled; do not reopen them.
 
 ## Intent
-Get people to choose Air India's sustainable fare even when it costs more, by rewarding them in a way they can see and collect. Audience for the work: a design jury. Deliverables: a clickable prototype and a 5-slide deck.
+Get people to choose Air India's sustainable fare even when it costs more, by rewarding them in a way they can see and collect. Audience for the work: a design jury. Deliverable: a clickable prototype.
 
 ## The concept (settled)
 - **What the fare buys:** each sustainable fare pays for a fixed extra quantity of sustainable aviation fuel (SAF, e.g. made from used cooking oil). The SAF is used somewhere on Air India's network within ~6 months, NOT necessarily in the passenger's own plane. Never imply it went into their plane (this is exactly what Lufthansa lost in court over: Cologne courts 2025, appeal upheld July 2026; Lufthansa renamed "Green Fares" to "Impact Fares" Oct 2026).
