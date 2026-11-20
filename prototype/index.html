@@ -1,0 +1,1214 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Air India Garden</title>
+<!--
+  Air India sustainable-fare garden. Desktop web prototype for a design jury.
+  Concept work, not an Air India product.
+
+  DESIGN SYSTEM: tokens taken from airindia.com's live stylesheets (Nov 2026):
+    red #DA0E29 / #B61032, aubergine #531251 / #3D003B, gold #EBBE69 / #9E7947 / #FED9A0,
+    cream #F9F6EE, rose #F8C1B4, greys #F7F8F8 to #25272C, radius 12px cards / 4px buttons,
+    spacing 4/8/12/16/20/24/32/40/48. Body face is Nunito Sans (the site's own body face).
+    Headings on the site use the proprietary AirIndia Variable; "Krona One" stands in
+    for its wide uppercase look.
+
+  THE ONE FORMULA. Every impact number on every screen is computed from these.
+    Fossil jet fuel: 3.16 kg CO2 per kg burned x 0.8 kg/L = 2.528 kg CO2 per litre.
+    SAF from used cooking oil (HEFA): about 80% lower lifecycle CO2.
+      => 1 litre of SAF in place of fossil fuel avoids 2.528 x 0.80 = 2.02 kg CO2.
+    Average petrol car: 0.17 kg CO2 per km.
+    The fare buys extra SAF equal to 20% of the trip's fuel share on short routes and
+    10% on long-haul (the split Lufthansa now discloses). SAF premium over fossil fuel:
+    about Rs 180 per litre (illustrative).
+    1 apple = 1 litre of SAF. 1 apple = Rs 20 off a sustainable fare, or 10 Maharaja Points.
+  All seed data is illustrative.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Krona+One&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#DA0E29; --red-600:#B61032; --red-50:#FEF2F5; --red-100:#FECBD8;
+  --aub:#531251; --aub-900:#3D003B;
+  --gold:#EBBE69; --gold-dk:#9E7947; --gold-lt:#FED9A0;
+  --cream:#F9F6EE; --rose:#F8C1B4;
+  --g50:#F7F8F8; --g100:#EDEEF1; --g200:#D3D6DB; --g300:#B0B5BF; --g400:#828A99;
+  --g500:#626773; --g600:#494E5C; --g800:#383C42; --g900:#25272C;
+  --green:#158C30; --green-50:#F1FDF4;
+  --display:"Krona One","Arial Black",sans-serif;
+  --body:"Nunito Sans","Helvetica Neue",Arial,sans-serif;
+  --shadow:0 2px 12px rgba(37,39,44,.08);
+  --shadow-lg:0 12px 40px rgba(37,39,44,.14);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:var(--body);color:var(--g600);background:#fff;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer}
+a{color:inherit}
+.wrap{max-width:1232px;margin:0 auto;padding:0 24px}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* Type */
+.h1{font-family:var(--display);font-weight:400;text-transform:uppercase;color:var(--red);font-size:28px;line-height:1.25;letter-spacing:.01em;margin:0}
+.h2{font-family:var(--display);font-weight:400;text-transform:uppercase;color:var(--g800);font-size:15px;line-height:1.35;letter-spacing:.02em;margin:0}
+.h3{font-family:var(--display);font-weight:400;text-transform:uppercase;color:var(--g800);font-size:12px;letter-spacing:.04em;margin:0}
+.lead{color:var(--g600);font-size:16px;margin:8px 0 0;max-width:720px}
+.small{font-size:13px;color:var(--g500)}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-dk)}
+
+/* Buttons (airindia.com: 4px radius, Nunito Sans bold) */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:4px;border:1px solid transparent;
+  padding:12px 24px;font-size:15px;font-weight:700;line-height:1.2;transition:background .15s,border-color .15s,color .15s;white-space:nowrap;text-decoration:none}
+.btn-primary{background:var(--red);color:#fff;border-color:var(--red)}
+.btn-primary:hover{background:var(--red-600);border-color:var(--red-600)}
+.btn-outline{background:#fff;color:var(--red);border-color:var(--red)}
+.btn-outline:hover{background:var(--red-50)}
+.btn-ghost{background:transparent;color:var(--red);border:0;padding:8px 0;font-weight:700}
+.btn-block{width:100%}
+.btn:disabled{background:var(--g100);border-color:var(--g200);color:var(--g400);cursor:not-allowed}
+.btn svg{width:18px;height:18px}
+.link{color:var(--red);font-weight:700;text-decoration:none;font-size:14px;display:inline-flex;align-items:center;gap:4px;background:none;border:0;padding:0}
+.link:hover{text-decoration:underline}
+
+/* Cards and tags */
+.card{background:#fff;border:1px solid var(--g100);border-radius:12px;box-shadow:var(--shadow)}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border-radius:4px;padding:4px 8px;line-height:1.2}
+.tag-gold{background:linear-gradient(135deg,#FED9A0,#EBBE69);color:#5B3A10}
+.tag-aub{background:var(--aub);color:#fff}
+.tag-green{background:var(--green-50);color:var(--green)}
+.tag-grey{background:var(--g100);color:var(--g600)}
+
+/* Site header */
+.utility{background:var(--g50);border-bottom:1px solid var(--g100);font-size:12px;color:var(--g500)}
+.utility .wrap{display:flex;justify-content:flex-end;gap:24px;height:32px;align-items:center}
+.site{background:#fff;border-bottom:1px solid var(--g100);position:sticky;top:0;z-index:30;box-shadow:0 2px 8px rgba(37,39,44,.04)}
+.site .wrap{display:flex;align-items:center;height:72px;gap:40px}
+.wordmark{font-family:var(--display);color:var(--red);font-size:21px;letter-spacing:.02em;text-decoration:none;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.wordmark i{display:block;width:12px;height:20px;border-right:3px solid var(--gold);border-top:3px solid var(--gold);border-radius:0 12px 0 0;transform:skewX(-14deg) translateY(-3px)}
+.mainnav{display:flex;gap:28px;font-size:15px;color:var(--g800);flex:1}
+.mainnav a{text-decoration:none;padding:24px 0;border-bottom:3px solid transparent}
+.mainnav a.on{color:var(--red);border-bottom-color:var(--red);font-weight:700}
+.member{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--g800)}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--aub);color:#fff;display:grid;place-items:center;font-weight:800;font-size:13px}
+.member b{display:block;font-size:14px}
+.member span{color:var(--g500)}
+
+/* Booking stepper */
+.ibe-steps{background:#fff;border-bottom:1px solid var(--g100)}
+.ibe-steps ol{display:flex;gap:0;list-style:none;margin:0;padding:0}
+.ibe-steps li{flex:1;display:flex;align-items:center;gap:10px;padding:16px 0;font-size:14px;color:var(--g400);font-weight:600;border-bottom:3px solid transparent}
+.ibe-steps li .n{width:24px;height:24px;border-radius:50%;border:1px solid var(--g300);display:grid;place-items:center;font-size:12px}
+.ibe-steps li.on{color:var(--red);border-bottom-color:var(--red)}
+.ibe-steps li.on .n{background:var(--red);border-color:var(--red);color:#fff}
+.tripbar{background:var(--aub);color:#fff}
+.tripbar .wrap{display:flex;align-items:center;gap:32px;height:64px;font-size:14px}
+.tripbar .route{font-family:var(--display);font-size:16px;letter-spacing:.02em;display:flex;align-items:center;gap:12px}
+.tripbar .route svg{width:22px;height:22px;color:var(--gold)}
+.tripbar .meta{opacity:.85}
+.tripbar .btn{margin-left:auto;background:transparent;color:#fff;border-color:rgba(255,255,255,.6);padding:8px 16px;font-size:13px}
+
+/* Page chrome */
+.page{display:none;padding-bottom:120px;min-height:calc(100vh - 104px)}
+.page.on{display:block;animation:pageIn .35s ease both}
+@keyframes pageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.crumbs{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--g500);padding:20px 0 0}
+.crumbs b{color:var(--g800)}
+.pagehead{padding:16px 0 28px}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:24px}
+.c8{grid-column:span 8}.c4{grid-column:span 4}.c7{grid-column:span 7}.c5{grid-column:span 5}.c12{grid-column:span 12}.c6{grid-column:span 6}
+.sticky{position:sticky;top:96px;align-self:start}
+
+/* Fare page */
+.flightline{display:flex;align-items:center;gap:24px;padding:16px 20px;background:var(--g50);border-radius:12px;margin-bottom:20px;font-size:14px;color:var(--g600)}
+.flightline .t{font-size:22px;font-weight:800;color:var(--g900)}
+.flightline .dur{flex:1;text-align:center;color:var(--g500);font-size:13px;position:relative}
+.flightline .dur::before{content:"";position:absolute;left:0;right:0;top:50%;border-top:1px dashed var(--g300);z-index:0}
+.flightline .dur span{background:var(--g50);padding:0 10px;position:relative}
+.fares{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.fare{position:relative;display:flex;flex-direction:column;justify-content:flex-start;width:100%;text-align:left;background:#fff;border:1px solid var(--g200);border-radius:12px;padding:0;overflow:hidden;transition:border-color .15s,box-shadow .15s;color:inherit}
+.fare:hover{box-shadow:var(--shadow-lg)}
+.fare.sel{border:2px solid var(--red);box-shadow:var(--shadow-lg)}
+.fare-hd{padding:20px 20px 16px;border-bottom:1px solid var(--g100);display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.fare-hd .price{font-size:28px;font-weight:800;color:var(--g900);line-height:1.1;margin-top:10px}
+.fare-hd .price small{font-size:13px;font-weight:600;color:var(--g500)}
+.radio{width:22px;height:22px;border-radius:50%;border:2px solid var(--g300);flex:0 0 auto;position:relative}
+.fare.sel .radio{border-color:var(--red)}
+.fare.sel .radio::after{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--red)}
+.incl{list-style:none;margin:0;padding:12px 20px}
+.incl li{display:flex;gap:12px;align-items:flex-start;padding:8px 0;font-size:14px;color:var(--g800)}
+.incl li svg{width:20px;height:20px;flex:0 0 auto;color:var(--g500);margin-top:1px}
+.incl li span{color:var(--g500);display:block;font-size:12.5px}
+.green-box{margin:4px 12px 12px;background:var(--cream);border:1px solid #EEDFC2;border-radius:8px;padding:12px 12px 4px}
+.green-box .incl{padding:0}
+.green-box .incl li svg{color:var(--gold-dk)}
+.fare .ribbon{position:absolute;top:0;right:20px;background:var(--red);color:#fff;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:0 0 4px 4px}
+.fare.value .nogarden{margin:4px 20px 16px;font-size:13px;color:var(--g500);border-top:1px dashed var(--g200);padding-top:12px}
+.how{margin-top:32px}
+.how-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:16px}
+.how-step{background:var(--g50);border-radius:12px;padding:20px}
+.how-step .num{font-family:var(--display);color:var(--red);font-size:20px}
+.how-step p{margin:8px 0 0;font-size:14px;color:var(--g800)}
+.how-step svg{width:44px;height:44px;color:var(--gold-dk);margin-top:10px}
+
+.summary{padding:24px}
+.summary .rowx{display:flex;justify-content:space-between;font-size:14px;padding:6px 0;color:var(--g600)}
+.summary .rowx b{color:var(--g900)}
+.summary .total{border-top:1px solid var(--g100);margin-top:10px;padding-top:14px;font-size:16px}
+.summary .total b{font-size:24px;font-weight:800}
+.earn{display:flex;gap:12px;align-items:center;background:var(--cream);border-radius:8px;padding:12px;margin:16px 0}
+.earn svg{width:52px;height:52px;flex:0 0 auto}
+.earn p{margin:0;font-size:13px;color:var(--g800)}
+.earn b{color:var(--aub)}
+.fine{font-size:12px;color:var(--g500);margin:12px 0 0;line-height:1.5}
+
+/* Boarding pass page */
+.banner{display:flex;align-items:center;gap:12px;background:var(--green-50);color:var(--green);border:1px solid #C6F7D1;border-radius:8px;padding:12px 16px;font-weight:700;font-size:14px;margin-bottom:20px}
+.banner svg{width:20px;height:20px}
+.tabs{display:flex;gap:32px;border-bottom:1px solid var(--g100);margin-bottom:20px}
+.tabs button{background:none;border:0;border-bottom:3px solid transparent;padding:12px 0;font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--g500)}
+.tabs button.on{color:var(--red);border-bottom-color:var(--red)}
+.bp{display:grid;grid-template-columns:1fr 290px;background:#fff;border-radius:16px;box-shadow:var(--shadow-lg);overflow:hidden;border:1px solid var(--g100)}
+.bp-main{min-width:0}
+.bp-band{background:linear-gradient(110deg,var(--aub-900) 0%,var(--aub) 45%,var(--red-600) 100%);color:#fff;padding:18px 28px;display:flex;justify-content:space-between;align-items:center}
+.bp-band .wm{font-family:var(--display);font-size:18px;letter-spacing:.03em;display:flex;gap:6px;align-items:center}
+.bp-band .wm i{display:block;width:10px;height:17px;border-right:3px solid var(--gold);border-top:3px solid var(--gold);border-radius:0 10px 0 0;transform:skewX(-14deg) translateY(-2px)}
+.bp-band .cls{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;display:flex;gap:10px;align-items:center}
+.bp-body{padding:24px 28px 26px}
+.bp-name{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--g500)}
+.bp-name b{display:block;font-size:18px;color:var(--g900);letter-spacing:.02em}
+.bp-route{display:flex;align-items:center;gap:20px;margin:18px 0 20px}
+.bp-route .code{font-family:var(--display);font-size:44px;color:var(--g900);line-height:1}
+.bp-route .city{font-size:13px;color:var(--g500);margin-top:6px}
+.bp-route .mid{flex:1;display:flex;align-items:center;gap:10px;color:var(--red)}
+.bp-route .mid::before,.bp-route .mid::after{content:"";flex:1;border-top:1.5px dashed var(--g300)}
+.bp-route .mid svg{width:26px;height:26px}
+.bp-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;border-top:1px solid var(--g100);padding-top:18px}
+.bp-grid div{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--g500)}
+.bp-grid b{display:block;white-space:nowrap;font-size:17px;color:var(--g900);letter-spacing:0;margin-top:2px}
+.bp-stub{border-left:2px dashed var(--g200);position:relative;padding:20px 22px;background:var(--cream);display:flex;flex-direction:column;align-items:center;text-align:center}
+.bp-stub::before,.bp-stub::after{content:"";position:absolute;left:-12px;width:22px;height:22px;border-radius:50%;background:#fff;border:1px solid var(--g100)}
+.bp-stub::before{top:-12px}.bp-stub::after{bottom:-12px}
+.bp-stub .tree-thumb{width:110px;height:110px}
+.bp-stub h4{margin:4px 0 2px;font-size:15px;color:var(--g900)}
+.bp-stub p{margin:0;font-size:12.5px;color:var(--g600)}
+.bp-stub .qr{width:132px;height:132px;margin-top:12px;background:#fff;padding:6px;border-radius:8px;border:1px solid #EEDFC2}
+.lockline{display:flex;align-items:center;gap:6px;justify-content:center;font-size:12px;color:var(--gold-dk);font-weight:700;margin-top:8px}
+.lockline svg{width:14px;height:14px}
+.side-actions{display:flex;flex-direction:column;gap:12px}
+.infocard{padding:20px}
+.infocard p{font-size:14px;margin:8px 0 0}
+
+/* Trips page */
+.toast{position:fixed;top:16px;right:24px;width:380px;background:#fff;border-radius:12px;box-shadow:0 20px 60px rgba(37,39,44,.25);padding:16px 16px 14px;z-index:60;
+  border-left:4px solid var(--red);transform:translateX(120%);transition:transform .45s cubic-bezier(.2,.9,.3,1)}
+.toast.show{transform:none}
+.toast .src{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--g500)}
+.toast .src .appicon{width:22px;height:22px;border-radius:6px;background:var(--red);display:grid;place-items:center}
+.toast .src .appicon i{display:block;width:6px;height:10px;border-right:2px solid var(--gold);border-top:2px solid var(--gold);border-radius:0 6px 0 0;transform:skewX(-14deg)}
+.toast h4{margin:8px 0 2px;font-size:15px;color:var(--g900)}
+.toast p{margin:0 0 10px;font-size:13px}
+.toast .x{position:absolute;top:10px;right:12px;background:none;border:0;color:var(--g400);font-size:18px;line-height:1}
+.trip{display:grid;grid-template-columns:1fr 380px;overflow:hidden;margin-bottom:20px}
+.trip-main{padding:24px 28px}
+.trip-top{display:flex;gap:12px;align-items:center;margin-bottom:16px}
+.trip-route{display:flex;align-items:center;gap:24px}
+.trip-route .code{font-family:var(--display);font-size:30px;color:var(--g900)}
+.trip-route .time{font-size:14px;color:var(--g600)}
+.trip-route .mid{flex:1;max-width:220px;display:flex;align-items:center;gap:8px;color:var(--g400);font-size:12px}
+.trip-route .mid::before,.trip-route .mid::after{content:"";flex:1;border-top:1.5px dashed var(--g300)}
+.trip-meta{display:flex;gap:28px;margin-top:18px;font-size:13px;color:var(--g500)}
+.trip-meta b{color:var(--g900);display:block;font-size:14px}
+.trip-tree{background:linear-gradient(160deg,var(--cream),#FBEDE3);display:flex;gap:16px;align-items:center;padding:20px 24px;border-left:1px solid #EEDFC2}
+.trip-tree svg.thumb{width:110px;height:120px;flex:0 0 auto}
+.trip-tree h4{margin:6px 0 4px;font-size:17px;color:var(--g900)}
+.trip-tree p{margin:0 0 12px;font-size:13px}
+.trip.past{opacity:.92}
+.trip.past .trip-tree{background:var(--g50);border-left-color:var(--g100)}
+
+/* Garden page: full screen scene with floating panels */
+#p-garden{padding:0}
+.scene{position:relative;height:calc(100vh - 105px);min-height:620px;overflow:hidden;background:#BFE0E4}
+.vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 90% at 50% 55%,transparent 55%,rgba(18,40,48,.22) 100%),linear-gradient(180deg,rgba(255,255,255,.18),transparent 22%)}
+#garden3d{position:absolute;inset:0}
+#garden3d canvas{display:block;width:100%;height:100%;touch-action:none}
+.panel{position:absolute;top:24px;background:rgba(255,255,255,.88);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px) saturate(1.2);
+  border-radius:12px;box-shadow:var(--shadow-lg);border:1px solid rgba(255,255,255,.7)}
+.panel-left{left:max(24px,calc((100vw - 1232px)/2));width:360px;padding:22px 24px}
+.panel-right{right:max(24px,calc((100vw - 1232px)/2));width:360px;overflow:hidden}
+.panel .big{font-family:var(--display);font-size:40px;color:var(--red);line-height:1.1;margin:16px 0 0}
+.panel .big small{display:block;font-family:var(--body);font-size:16px;font-weight:700;color:var(--g800);margin-top:6px}
+.panel .compare{font-size:15px;color:var(--g900);font-weight:700;margin:10px 0 4px}
+.panel .share{font-size:13px;color:var(--g500);margin:0}
+details.how-count{margin-top:14px;border-top:1px solid var(--g100);padding-top:12px}
+details.how-count summary{list-style:none;cursor:pointer;color:var(--red);font-weight:700;font-size:14px}
+details.how-count summary::-webkit-details-marker{display:none}
+details.how-count summary::after{content:" +"}
+details.how-count[open] summary::after{content:" \2212"}
+details.how-count .fc{font-size:12.5px;color:var(--g600);margin-top:8px;line-height:1.6}
+details.how-count .fc b{color:var(--g900)}
+.member-card{color:#fff;padding:18px 20px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px 14px;align-items:end;
+  background:radial-gradient(400px 200px at 100% 120%,rgba(218,14,41,.5),transparent 60%),linear-gradient(120deg,var(--aub-900),var(--aub) 60%,#6E1B5A)}
+.member-card .id{grid-column:1/-1}
+.member-card .club{font-family:var(--display);font-size:12px;letter-spacing:.04em;color:var(--gold-lt)}
+.member-card .who{font-size:18px;font-weight:800;margin-top:2px}
+.member-card .stat{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.75)}
+.member-card .stat b{display:block;font-family:var(--display);font-size:17px;letter-spacing:0;color:#fff;margin-top:4px;font-weight:400}
+.member-card .stat b.gold{color:var(--gold)}
+.apples{padding:16px 20px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--g100)}
+.apples .ico{width:40px;height:44px;flex:0 0 auto}
+.apples .n{font-family:var(--display);font-size:28px;color:var(--g900);line-height:1;font-variant-numeric:tabular-nums;display:inline-block}
+.apples .n.bump{animation:bump .25s ease}
+@keyframes bump{50%{transform:scale(1.15)}}
+.apples .l{font-size:13px;color:var(--g500)}
+.apples .acts{margin-left:auto}
+.apples .acts .btn{padding:10px 18px;font-size:14px}
+.coll{padding:14px 20px 18px}
+.coll .hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.chips{display:flex;gap:6px;flex-wrap:nowrap}
+.chip{width:40px;height:46px;flex:0 0 auto;border-radius:8px;background:var(--cream);border:1px solid #EEDFC2;padding:2px;position:relative}
+.chip:hover{border-color:var(--red)}
+.chip svg{width:100%;height:100%}
+.chip.rare{background:linear-gradient(160deg,#FFF6E0,#FED9A0)}
+.chip.ripe::after{content:"";position:absolute;top:3px;right:3px;width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 0 2px #fff}
+.chip.empty{background:var(--g50);border:1px dashed var(--g300);display:grid;place-items:center;color:var(--g400);font-size:18px}
+.garden-hint{position:absolute;left:50%;bottom:86px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.94);
+  border-radius:999px;padding:10px 18px;font-size:14px;color:var(--g800);font-weight:700;box-shadow:var(--shadow-lg);white-space:nowrap}
+.planet{display:flex;gap:14px;align-items:center;margin-top:14px;padding-top:14px;border-top:1px solid var(--g100)}
+.planet .globe{width:76px;height:76px;flex:0 0 auto;border-radius:50%;background:radial-gradient(circle at 50% 50%,rgba(124,196,255,.18),transparent 70%)}
+.planet .eyebrow{font-size:10.5px}
+.planet .n{font-family:var(--display);font-size:16px;color:var(--g900);line-height:1.2;white-space:nowrap;margin-top:2px;font-variant-numeric:tabular-nums}
+.planet .l{font-size:12.5px;color:var(--g600);margin-top:3px;line-height:1.4}
+#earthIntro{position:fixed;inset:0;z-index:200;display:none;color:#fff;
+  background:radial-gradient(60% 60% at 50% 42%,#26103A 0%,#120820 55%,#06030C 100%)}
+#earthIntro.on{display:block}
+#earthIntro.go{opacity:0;transform:scale(1.04);transition:opacity .6s ease,transform .6s ease}
+#earthIntro .stage{position:absolute;inset:0}
+#earthIntro .copy{position:absolute;left:0;right:0;top:calc(42% + min(160px,19vh) + 34px);text-align:center;animation:introCopy .9s .35s ease both}
+#earthIntro .copy .club{font-family:var(--display);font-size:11px;letter-spacing:.14em;color:var(--gold)}
+#earthIntro .copy p{margin:10px 0 0;font-size:20px;font-weight:700;letter-spacing:.01em}
+#earthIntro .copy span{display:block;margin-top:6px;font-size:14px;color:rgba(255,255,255,.7)}
+#earthIntro .bar{width:120px;height:2px;margin:18px auto 0;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden}
+#earthIntro .bar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--gold-dk),var(--gold));transform-origin:left;animation:introBar 2.4s linear both}
+@keyframes introCopy{from{opacity:0;transform:translateY(8px)}}
+@keyframes introBar{from{transform:scaleX(0)}}
+.garden-hint .pulse{width:10px;height:10px;border-radius:50%;background:var(--red);box-shadow:0 0 0 0 rgba(218,14,41,.5);animation:pulse 1.6s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 10px rgba(218,14,41,0)}100%{box-shadow:0 0 0 0 rgba(218,14,41,0)}}
+.tree{cursor:pointer;outline:none}
+.tree:focus-visible .hit{stroke:var(--red);stroke-width:2;stroke-dasharray:4 4}
+.halo{animation:halo 2.4s ease-in-out infinite}
+@keyframes halo{0%,100%{opacity:.25}50%{opacity:.85}}
+@media (max-height:820px){.panel{top:16px}.panel-left{padding:16px 20px}.panel .big{font-size:30px;margin-top:8px}.panel .h1{font-size:22px}.member-card{padding:14px 18px}.garden-hint{bottom:80px;font-size:13px}}
+@media (max-width:1100px){.panel-left{width:300px}.panel-right{width:300px}.panel .big{font-size:30px}}
+
+/* Receipt drawer */
+.scrim{position:fixed;inset:0;background:rgba(37,39,44,.45);opacity:0;pointer-events:none;transition:opacity .3s;z-index:70}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100vh;width:480px;max-width:100vw;background:#fff;z-index:80;transform:translateX(100%);
+  transition:transform .4s cubic-bezier(.2,.9,.3,1);display:flex;flex-direction:column;box-shadow:-20px 0 60px rgba(37,39,44,.2)}
+.drawer.on{transform:none}
+.drawer-hd{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1px solid var(--g100)}
+.drawer-hd button{background:none;border:0;font-size:24px;line-height:1;color:var(--g500)}
+.drawer-body{overflow-y:auto;padding:0 0 24px;flex:1}
+.drawer-ft{display:flex;gap:12px;padding:16px 24px;border-top:1px solid var(--g100);background:#fff;box-shadow:0 -8px 24px rgba(37,39,44,.06)}
+.drawer-ft .btn{flex:1}
+body.drawer-open .presenter{left:calc(50% - 240px)}
+.presenter{transition:left .4s cubic-bezier(.2,.9,.3,1)}
+.rc-hero{background:linear-gradient(170deg,var(--cream),#FBE8DD);display:flex;gap:16px;align-items:flex-end;padding:20px 24px 0}
+.rc-hero svg{width:150px;height:160px;flex:0 0 auto}
+.rc-hero .txt{padding-bottom:20px}
+.rc-hero h3{margin:8px 0 4px;font-size:24px;color:var(--g900);font-weight:800}
+.rc-hero p{margin:0;font-size:13px}
+.rc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:20px 24px 4px}
+.rc-stats div{background:var(--g50);border-radius:8px;padding:12px}
+.rc-stats b{display:block;font-family:var(--display);font-size:22px;color:var(--red);font-weight:400}
+.rc-stats span{font-size:12px;color:var(--g500)}
+.rc-sec{padding:16px 24px 0}
+.kv{display:flex;justify-content:space-between;gap:16px;padding:10px 0;border-bottom:1px solid var(--g100);font-size:14px}
+.kv span{color:var(--g500)}
+.kv b{color:var(--g900);text-align:right}
+.timeline{list-style:none;margin:12px 0 0;padding:0}
+.timeline li{display:flex;gap:12px;padding:0 0 16px;position:relative;font-size:14px;color:var(--g800)}
+.timeline li::before{content:"";position:absolute;left:11px;top:24px;bottom:0;border-left:2px solid var(--g200)}
+.timeline li:last-child::before{display:none}
+.timeline .dot{width:24px;height:24px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;background:var(--green);color:#fff;font-size:13px;font-weight:800}
+.timeline li.wait .dot{background:#fff;border:2px dashed var(--gold-dk);color:var(--gold-dk)}
+.timeline li span{display:block;font-size:12.5px;color:var(--g500)}
+.plain{margin:16px 24px 0;background:var(--cream);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:12px 14px;font-size:13px;color:var(--g800)}
+
+/* Spend page */
+.balance{border-radius:16px;color:#fff;padding:28px 32px;display:flex;align-items:center;gap:24px;margin-bottom:28px;position:relative;overflow:hidden;
+  background:radial-gradient(500px 260px at 100% 0%,rgba(235,190,105,.25),transparent 60%),linear-gradient(120deg,var(--aub-900),var(--aub))}
+.balance svg{width:72px;height:72px}
+.balance .n{font-family:var(--display);font-size:40px;color:var(--gold);line-height:1}
+.balance .l{font-size:14px;color:rgba(255,255,255,.85);margin-top:6px}
+.balance .worth{margin-left:auto;text-align:right;font-size:14px;color:rgba(255,255,255,.85)}
+.balance .worth b{display:block;font-size:22px;color:#fff;font-weight:800}
+.hero-perk{display:grid;grid-template-columns:1fr 320px;gap:24px;border:1.5px solid var(--gold);background:linear-gradient(120deg,#FFFDF7,var(--cream));padding:28px 32px;border-radius:16px}
+.hero-perk p{font-size:15px;margin:10px 0 0;color:var(--g800);max-width:560px}
+.meter{margin-top:18px;max-width:560px}
+.meter .bar{height:10px;border-radius:999px;background:var(--g100);overflow:hidden}
+.meter .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold-dk),var(--gold));border-radius:999px;transition:width .6s}
+.meter .lbls{display:flex;justify-content:space-between;font-size:12.5px;color:var(--g500);margin-top:6px}
+.hero-perk .side{display:flex;flex-direction:column;justify-content:center;gap:10px;border-left:1px solid #EEDFC2;padding-left:24px}
+.hero-perk .side .amt{font-family:var(--display);font-size:30px;color:var(--red)}
+.perks{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:20px}
+.perk{padding:24px;display:flex;flex-direction:column}
+.perk svg{width:40px;height:40px;color:var(--gold-dk)}
+.perk h3{margin:14px 0 6px;font-size:17px;color:var(--g900)}
+.perk p{margin:0 0 18px;font-size:14px;flex:1}
+.perk .cost{font-size:13px;color:var(--g500);margin-bottom:12px}
+.perk .cost b{color:var(--aub);font-size:15px}
+.done-note{display:none;align-items:center;gap:8px;color:var(--green);font-weight:700;font-size:14px;margin-top:10px}
+.done-note.on{display:flex}
+
+/* Footer */
+body.full .foot{display:none}
+.foot{background:var(--g50);border-top:1px solid var(--g100);font-size:12px;color:var(--g500)}
+.foot .wrap{padding:20px 24px 96px;display:flex;justify-content:space-between}
+
+/* Presenter control */
+.presenter{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:90;background:rgba(37,39,44,.94);color:#fff;border-radius:999px;
+  display:flex;align-items:center;gap:4px;padding:6px;box-shadow:0 12px 40px rgba(0,0,0,.3);font-size:13px}
+.presenter button{white-space:nowrap;background:none;border:0;color:#fff;border-radius:999px;padding:8px 14px;font-weight:700;display:flex;align-items:center;gap:8px;opacity:.7}
+.presenter button:hover{opacity:1;background:rgba(255,255,255,.08)}
+.presenter button.on{opacity:1;background:var(--red)}
+.presenter button .k{font-family:var(--display);font-size:11px}
+.presenter .arrow{font-size:16px;padding:8px 12px}
+.presenter .arrow:disabled{opacity:.25;cursor:default;background:none}
+
+.fly{position:fixed;left:0;top:0;width:22px;height:22px;z-index:100;pointer-events:none}
+
+@media (max-width:1100px){
+  .mainnav{display:none}
+  .c8,.c4,.c7,.c5,.c6{grid-column:span 12}
+  .sticky{position:static}
+  .member-card{grid-template-columns:1fr 1fr}
+  .presenter button .lbl{display:none}
+}
+@media (max-width:760px){
+  .fares,.how-steps,.perks,.hero-perk{grid-template-columns:1fr}
+  .bp,.trip{grid-template-columns:1fr}
+  .bp-grid{grid-template-columns:repeat(3,1fr)}
+  .bp-stub{border-left:0;border-top:2px dashed var(--g200)}
+  .tripbar .meta{display:none}
+  .hero-perk .side{border-left:0;padding-left:0}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<!-- Shared SVG defs -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="goldFrame" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FED9A0"/><stop offset=".35" stop-color="#C9962F"/>
+      <stop offset=".6" stop-color="#F3D28C"/><stop offset="1" stop-color="#9E7947"/>
+    </linearGradient>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFBF3"/><stop offset=".55" stop-color="#FBEADF"/><stop offset="1" stop-color="#F8D9C9"/>
+    </linearGradient>
+    <linearGradient id="hillFar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D6E2BE"/><stop offset="1" stop-color="#C2D3A6"/></linearGradient>
+    <linearGradient id="hillMid" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#AFC68F"/><stop offset="1" stop-color="#94B077"/></linearGradient>
+    <linearGradient id="hillNear" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7FA165"/><stop offset="1" stop-color="#5E8350"/></linearGradient>
+    <radialGradient id="rareGlow"><stop offset="0" stop-color="#FED9A0" stop-opacity=".9"/><stop offset=".5" stop-color="#EBBE69" stop-opacity=".25"/><stop offset="1" stop-color="#EBBE69" stop-opacity="0"/></radialGradient>
+    <radialGradient id="sun"><stop offset="0" stop-color="#FED9A0" stop-opacity=".95"/><stop offset="1" stop-color="#FED9A0" stop-opacity="0"/></radialGradient>
+    <pattern id="chakra" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M20 4 L23.5 16.5 36 20 23.5 23.5 20 36 16.5 23.5 4 20 16.5 16.5Z" fill="none" stroke="#C9962F" stroke-width=".5"/>
+    </pattern>
+    <clipPath id="winClip"><path id="winClipPath"/></clipPath>
+    <symbol id="apple" viewBox="-12 -14 24 26">
+      <path d="M0 -6 C-3 -9 -10 -8 -10 0 C-10 7 -5 11 -2 10 C-1 9.6 1 9.6 2 10 C5 11 10 7 10 0 C10 -8 3 -9 0 -6Z" fill="#D21E34"/>
+      <path d="M-6 -3 C-7 0 -6 3 -4 4" stroke="#F6B1A8" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <path d="M0 -6 C0 -9 1 -11 2 -12" stroke="#5E4630" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+      <path d="M1 -10 C4 -13 8 -12 9 -10 C6 -8 3 -8 1 -10Z" fill="#4A8A57"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="utility"><div class="wrap"><span>India | English</span><span>Support</span><span>Concept prototype</span></div></div>
+<header class="site">
+  <div class="wrap">
+    <a class="wordmark" href="#" onclick="go(0);return false">AIR INDIA<i></i></a>
+    <nav class="mainnav" id="mainnav">
+      <a href="#" data-nav="book">Book &amp; Manage</a>
+      <a href="#">Where We Fly</a>
+      <a href="#">Prepare to Travel</a>
+      <a href="#">Air India Experience</a>
+      <a href="#" data-nav="club">Maharaja Club</a>
+    </nav>
+    <div class="member">
+      <div class="avatar">AR</div>
+      <div><b>Ananya</b><span id="hdrApples">0 apples</span></div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ 1. SELECT FARE ============ -->
+<main class="page on" id="p-fare">
+  <div class="ibe-steps"><div class="wrap"><ol>
+    <li class="on"><span class="n">1</span>Flights</li><li><span class="n">2</span>Passengers</li><li><span class="n">3</span>Seats &amp; extras</li><li><span class="n">4</span>Payment</li>
+  </ol></div></div>
+  <div class="tripbar"><div class="wrap">
+    <div class="route">DEL <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12h15m-5-5 5 5-5 5"/></svg> BLR</div>
+    <div class="meta">New Delhi to Bengaluru</div><div class="meta">Fri, 20 Nov 2026</div><div class="meta">1 Adult</div><div class="meta">Economy</div>
+    <button class="btn">Modify search</button>
+  </div></div>
+
+  <div class="wrap">
+    <div class="pagehead" style="padding-top:28px">
+      <h1 class="h1">Select your fare</h1>
+      <p class="lead">Same seat, same bags. The sustainable fare also pays for extra sustainable aviation fuel, and plants a tree in your garden.</p>
+    </div>
+    <div class="grid">
+      <div class="c8">
+        <div class="flightline">
+          <div><div class="t">07:10</div>DEL, Terminal 3</div>
+          <div class="dur"><span>2h 45m · Nonstop · AI 503 · A320neo</span></div>
+          <div style="text-align:right"><div class="t">09:55</div>BLR, Terminal 1</div>
+        </div>
+
+        <div class="fares">
+          <button class="fare value" data-fare="value">
+            <div class="fare-hd">
+              <div><div class="h2">Economy Value</div><div class="price" id="valPrice"></div></div>
+              <span class="radio"></span>
+            </div>
+            <ul class="incl" id="inclValue"></ul>
+            <div class="nogarden">No sustainable fuel contribution. No tree.</div>
+          </button>
+
+          <button class="fare sel" data-fare="green">
+            <span class="ribbon">New</span>
+            <div class="fare-hd">
+              <div><div class="h2">Economy Sustainable</div><div class="price" id="greenPrice"></div></div>
+              <span class="radio"></span>
+            </div>
+            <ul class="incl" id="inclGreen"></ul>
+            <div class="green-box">
+              <ul class="incl">
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 21h10M9 21V9l3-5 3 5v12M9 13h6"/></svg><div><b id="greenLitres"></b><span>Extra sustainable aviation fuel, used on our network within 6 months</span></div></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21v-7M12 14c-4 0-7-3-7-7 4 0 7 3 7 7Zm0 0c0-4 3-7 7-7 0 4-3 7-7 7Z"/></svg><div><b>A banyan for your garden</b><span>Printed on your boarding pass. Planted after you land.</span></div></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="13" r="7"/><path d="M12 6c0-2 1-3 3-3"/></svg><div><b id="greenApples"></b><span id="greenApplesSub"></span></div></li>
+              </ul>
+            </div>
+          </button>
+        </div>
+
+        <section class="how">
+          <div class="h2">How your garden grows</div>
+          <div class="how-steps">
+            <div class="how-step"><div class="num">01</div><p>Book the sustainable fare.</p>
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="10" width="32" height="28" rx="4"/><path d="M8 18h32M16 26h10M16 31h16"/></svg></div>
+            <div class="how-step"><div class="num">02</div><p>Your tree is printed on your boarding pass.</p>
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="6" y="12" width="36" height="24" rx="4"/><path d="M30 12v24" stroke-dasharray="2 2"/><path d="M36 30v-6m0 0c-3 0-4-2-4-4 3 0 4 2 4 4Zm0 0c0-2 1-4 4-4 0 2-1 4-4 4Z"/></svg></div>
+            <div class="how-step"><div class="num">03</div><p>Plant it in your garden after you land.</p>
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M24 22c-8 0-15-6-15-14 8 0 15 6 15 14Zm0 0c0-8 7-14 15-14 0 8-7 14-15 14Zm0 0v18M12 40h24"/></svg></div>
+            <div class="how-step"><div class="num">04</div><p>Shake it for apples. Spend them on your next trip.</p>
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M24 14c-4-4-14-3-14 8 0 10 7 16 11 14 2-1 4-1 6 0 4 2 11-4 11-14 0-11-10-12-14-8Zm0 0c0-4 2-7 5-8"/></svg></div>
+          </div>
+        </section>
+      </div>
+
+      <aside class="c4 sticky">
+        <div class="card summary">
+          <div class="h2">Fare summary</div>
+          <div style="margin-top:14px">
+            <div class="rowx"><span>Base fare</span><b id="sBase"></b></div>
+            <div class="rowx"><span>Taxes and fees</span><b id="sTax"></b></div>
+            <div class="rowx" id="sSafRow"><span>Sustainable fuel contribution</span><b id="sSaf"></b></div>
+            <div class="rowx total"><span>Total</span><b id="sTotal"></b></div>
+          </div>
+          <div class="earn" id="sEarn">
+            <svg viewBox="-100 -200 200 210" id="sumTree"></svg>
+            <p>You get a <b>banyan</b> and <b id="sApples"></b> worth <b id="sApplesWorth"></b> off your next sustainable fare.</p>
+          </div>
+          <button class="btn btn-primary btn-block" id="continueBtn">Continue</button>
+          <p class="fine">The fuel is added to Air India's supply and used on our network within six months. It will not necessarily be in your plane.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</main>
+
+<!-- ============ 2. BOARDING PASS ============ -->
+<main class="page" id="p-pass">
+  <div class="wrap">
+    <div class="crumbs">Home / Check-in / <b>Boarding pass</b></div>
+    <div class="pagehead"><h1 class="h1">Boarding pass</h1></div>
+    <div class="banner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg>You are checked in. Your boarding pass is ready.</div>
+    <div class="grid">
+      <div class="c8">
+        <div class="tabs" role="tablist">
+          <button class="on" id="tabPaper" role="tab">Printed pass</button>
+          <button id="tabMobile" role="tab">Mobile pass</button>
+        </div>
+        <div class="bp">
+          <div class="bp-main">
+            <div class="bp-band"><span class="wm">AIR INDIA<i></i></span><span class="cls">Economy <span class="tag tag-gold">Sustainable fare</span></span></div>
+            <div class="bp-body">
+              <div class="bp-name">Passenger<b>RAO / ANANYA MS</b></div>
+              <div class="bp-route">
+                <div><div class="code">DEL</div><div class="city">New Delhi · T3 · 07:10</div></div>
+                <div class="mid"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5Z" transform="rotate(90 12 12)"/></svg></div>
+                <div style="text-align:right"><div class="code">BLR</div><div class="city">Bengaluru · T1 · 09:55</div></div>
+              </div>
+              <div class="bp-grid">
+                <div>Flight<b>AI 503</b></div><div>Date<b>20 Nov</b></div><div>Boarding<b>06:30</b></div>
+                <div>Gate<b>12B</b></div><div>Seat<b>14A</b></div><div>Zone<b>2</b></div>
+              </div>
+            </div>
+          </div>
+          <div class="bp-stub" id="stub"></div>
+        </div>
+      </div>
+      <aside class="c4">
+        <div class="side-actions">
+          <button class="btn btn-primary">Download boarding pass</button>
+          <button class="btn btn-outline">Add to wallet</button>
+          <button class="btn btn-outline">Email boarding pass</button>
+        </div>
+        <div class="card infocard" style="margin-top:20px">
+          <div class="h3">About your tree</div>
+          <p>Each tree stands for the sustainable fuel your fare paid for. It is a symbol, not a sapling in the ground.</p>
+          <p>You can plant it once AI 503 lands. If the trip is cancelled, the tree is never planted and the contribution is refunded.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</main>
+
+<!-- ============ 3. MY TRIPS (LANDED) ============ -->
+<main class="page" id="p-trips">
+  <div class="wrap">
+    <div class="crumbs">Home / <b>My trips</b></div>
+    <div class="pagehead"><h1 class="h1">My trips</h1></div>
+    <div class="tabs"><button>Upcoming</button><button class="on">Completed</button></div>
+
+    <div class="card trip">
+      <div class="trip-main">
+        <div class="trip-top"><span class="tag tag-green">Landed 09:52</span><span class="tag tag-gold">Sustainable fare</span><span class="small">Fri, 20 Nov 2026 · AI 503</span></div>
+        <div class="trip-route">
+          <div><div class="code">DEL</div><div class="time">07:10 · New Delhi</div></div>
+          <div class="mid">2h 42m</div>
+          <div><div class="code">BLR</div><div class="time">09:52 · Bengaluru</div></div>
+        </div>
+        <div class="trip-meta"><div>Seat<b>14A</b></div><div>Booking ref<b>QX7R2M</b></div><div>Maharaja Points<b>Posting in 3 days</b></div></div>
+      </div>
+      <div class="trip-tree">
+        <svg class="thumb" viewBox="-100 -200 200 210" id="tripTree"></svg>
+        <div>
+          <span class="eyebrow">Ready to plant</span>
+          <h4>Your banyan is waiting</h4>
+          <p>Native to Bengaluru, where you just landed.</p>
+          <button class="btn btn-primary" id="plantBtn">Plant your banyan</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card trip past">
+      <div class="trip-main">
+        <div class="trip-top"><span class="tag tag-grey">Completed</span><span class="tag tag-gold">Sustainable fare</span><span class="small">Tue, 17 Feb 2026 · AI 915</span></div>
+        <div class="trip-route">
+          <div><div class="code">DEL</div><div class="time">New Delhi</div></div>
+          <div class="mid">3h 50m</div>
+          <div><div class="code">DXB</div><div class="time">Dubai</div></div>
+        </div>
+      </div>
+      <div class="trip-tree">
+        <svg class="thumb" viewBox="-100 -200 200 210" id="tripTree2"></svg>
+        <div><span class="eyebrow" style="color:var(--g500)">Planted</span><h4>Date palm</h4><button class="link" data-receipt="dxb">View receipt ›</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status">
+    <button class="x" aria-label="Dismiss" onclick="this.parentElement.classList.remove('show')">×</button>
+    <div class="src"><span class="appicon"><i></i></span>Air India · now</div>
+    <h4>Welcome to Bengaluru</h4>
+    <p>You have landed. Your banyan is ready to plant in your garden.</p>
+    <button class="btn btn-primary" style="padding:8px 16px;font-size:13px" onclick="plantNow()">Plant now</button>
+  </div>
+</main>
+
+<!-- ============ 4. GARDEN (full screen) ============ -->
+<main class="page" id="p-garden">
+  <section class="scene">
+    <div id="garden3d" role="img" aria-label="Your banyan on its island"></div>
+    <div class="vignette"></div>
+
+    <div class="panel panel-left">
+      <div class="crumbs" style="padding:0">Home / Maharaja Club / <b>My garden</b></div>
+      <h1 class="h1" style="margin-top:10px">My garden</h1>
+      <div class="big" id="co2Big"></div>
+      <p class="compare" id="co2Compare"></p>
+      <p class="share" id="co2Share"></p>
+      <div class="planet">
+        <div class="globe" id="planetGlobe" aria-hidden="true"></div>
+        <div>
+          <div class="eyebrow">Your share of the planet</div>
+          <div class="n" id="planetPct"></div>
+          <div class="l" id="planetLbl"></div>
+        </div>
+      </div>
+      <details class="how-count"><summary>How we count this</summary><div class="fc" id="formula"></div></details>
+    </div>
+
+    <div class="panel panel-right">
+      <div class="member-card">
+        <div class="id"><div class="club">MAHARAJA CLUB</div><div class="who">Ananya Rao</div><div style="font-size:12px;opacity:.8">Silver member</div></div>
+        <div class="stat">Points<b id="mcPoints">12,480</b></div>
+        <div class="stat">Trees<b id="mcTrees">0</b></div>
+        <div class="stat">Trips<b id="mcTrips">0</b></div>
+        <div class="stat">Apples<b class="gold" id="mcApples">0</b></div>
+      </div>
+      <div class="apples">
+        <svg class="ico" viewBox="0 0 24 26"><use href="#apple" width="24" height="26"/></svg>
+        <div><div class="n" id="appleCount">0</div><div class="l">apples to spend</div></div>
+        <div class="acts"><button class="btn btn-primary" data-go="5">Spend</button></div>
+      </div>
+      <div class="coll">
+        <div class="hd"><div class="h3">Your collection</div><span class="small" id="collCount"></span></div>
+        <div class="chips" id="collList"></div>
+      </div>
+    </div>
+
+    <div class="garden-hint" id="gardenHint"><span class="pulse"></span>Shake the banyan. The pink trees are cherry blossom.</div>
+  </section>
+</main>
+
+<!-- ============ 6. SPEND ============ -->
+<main class="page" id="p-spend">
+  <div class="wrap">
+    <div class="crumbs">Home / Maharaja Club / My garden / <b>Spend apples</b></div>
+    <div class="pagehead"><h1 class="h1">Spend your apples</h1><p class="lead">Apples are only earned on sustainable fares, so they are worth more than regular points.</p></div>
+
+    <div class="balance">
+      <svg viewBox="0 0 24 26"><use href="#apple" width="24" height="26"/></svg>
+      <div><div class="n" id="balN">0</div><div class="l">apples in your basket</div></div>
+      <div class="worth">Or convert to<b id="balWorth"></b>Maharaja Points</div>
+    </div>
+
+    <div class="hero-perk">
+      <div>
+        <span class="tag tag-gold">Apples only</span>
+        <h2 class="h1" style="font-size:22px;margin-top:12px;color:var(--g900)">Money off your next sustainable fare</h2>
+        <p id="heroCopy"></p>
+        <div class="meter"><div class="bar"><i id="meterFill" style="width:0"></i></div>
+          <div class="lbls"><span id="meterL"></span><span id="meterR"></span></div></div>
+      </div>
+      <div class="side">
+        <span class="small">Your apples take off</span>
+        <span class="amt" id="heroAmt"></span>
+        <button class="btn btn-primary btn-block" id="heroBtn">Save for my next fare</button>
+        <div class="done-note" id="heroDone">✓ Saved for your next sustainable booking</div>
+      </div>
+    </div>
+
+    <div class="h2" style="margin-top:36px">More ways to spend</div>
+    <div class="perks">
+      <div class="card perk">
+        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 5l4 9 10 1-7.5 6.8L28.6 32 20 27l-8.6 5 2.1-10.2L6 15l10-1Z"/></svg>
+        <h3>Convert to Maharaja Points</h3><p>Move apples into your Maharaja Club balance and use them on any award.</p>
+        <div class="cost">1 apple = <b>10 points</b></div>
+        <button class="btn btn-outline" data-perk="points">Convert all</button>
+        <div class="done-note" data-done="points"></div>
+      </div>
+      <div class="card perk">
+        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="9" y="11" width="22" height="24" rx="4"/><path d="M15 11V6h10v5M15 18v10M25 18v10"/></svg>
+        <h3>Extra 5 kg baggage</h3><p>Add 5 kg to your checked allowance on any Air India flight.</p>
+        <div class="cost"><b>30 apples</b></div>
+        <button class="btn btn-outline" data-perk="bag">Redeem</button>
+        <div class="done-note" data-done="bag"></div>
+      </div>
+      <div class="card perk">
+        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 26h24M10 26c0-6 4.5-11 10-11s10 5 10 11M20 15v-3M6 30h28"/></svg>
+        <h3>Meal upgrade</h3><p>Choose from the premium economy menu on your next flight.</p>
+        <div class="cost"><b>20 apples</b></div>
+        <button class="btn btn-outline" data-perk="meal">Redeem</button>
+        <div class="done-note" data-done="meal"></div>
+      </div>
+    </div>
+
+    <div style="margin-top:36px;display:flex;gap:12px">
+      <button class="btn btn-primary" onclick="go(0)">Book another sustainable fare</button>
+      <button class="btn btn-outline" data-go="3">Back to my garden</button>
+    </div>
+  </div>
+</main>
+
+<div id="earthIntro" role="status" aria-live="polite">
+  <div class="stage" id="earthStage"></div>
+  <div class="copy"><div class="club">AIR INDIA</div><p>Your booking is still open.</p><span>Taking you back to where you left off</span><div class="bar"><i></i></div></div>
+</div>
+
+<footer class="foot"><div class="wrap"><span>Concept prototype for a design jury. Not an Air India product. All figures are illustrative.</span><span>Impact formula: see "How we count this" in My garden.</span></div></footer>
+
+<!-- Receipt drawer -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Tree receipt">
+  <div class="drawer-hd"><div class="h2">Tree receipt</div><button aria-label="Close" id="drawerClose">×</button></div>
+  <div class="drawer-body" id="drawerBody"></div>
+  <div class="drawer-ft" id="drawerFt"></div>
+</aside>
+
+<nav class="presenter" aria-label="Prototype steps">
+  <button class="arrow" id="prevBtn" aria-label="Previous">‹</button>
+  <button data-step="0"><span class="k">1</span><span class="lbl">Fare</span></button>
+  <button data-step="1"><span class="k">2</span><span class="lbl">Boarding pass</span></button>
+  <button data-step="2"><span class="k">3</span><span class="lbl">Landed</span></button>
+  <button data-step="3"><span class="k">4</span><span class="lbl">Garden</span></button>
+  <button data-step="4"><span class="k">5</span><span class="lbl">Receipt</span></button>
+  <button data-step="5"><span class="k">6</span><span class="lbl">Spend</span></button>
+  <button class="arrow" id="nextBtn" aria-label="Next">›</button>
+</nav>
+
+<script src="garden.bundle.js"></script>
+<script>
+/* ---------------- THE ONE FORMULA ---------------- */
+const KG_CO2_PER_L_FOSSIL = 3.16 * 0.8;            // 2.528
+const SAF_CUT = 0.80;                               // HEFA from used cooking oil
+const KG_CO2_AVOIDED_PER_L = KG_CO2_PER_L_FOSSIL * SAF_CUT; // 2.02
+const CAR_KG_PER_KM = 0.17;
+const WORLD_CO2_KG_YEAR = 37e12; // about 37 billion tonnes of CO2 a year (Global Carbon Budget)
+const SAF_PREMIUM_RS_PER_L = 180;                   // illustrative
+const RS_PER_APPLE = 20, POINTS_PER_APPLE = 10;
+const ROAD_TRIPS = [ // real road distances, rounded
+  ['Mumbai','Pune',150],['Delhi','Agra',230],['Delhi','Jaipur',280],['Chennai','Bengaluru',345],
+  ['Delhi','Amritsar',450],['Delhi','Lucknow',555],['Mumbai','Goa',590],['Delhi','Varanasi',820],
+  ['Mumbai','Bengaluru',985],['Delhi','Mumbai',1400]
+];
+
+/* Seed account. tripL = the passenger's share of the flight's fuel. litres = extra SAF bought
+   (20% of tripL short-haul, 10% long-haul). Everything else is derived. */
+const TREES = [
+  { id:'bom', sp:'banyan', name:'Banyan', city:'Mumbai', route:'DEL → BOM', flight:'AI 805', date:'09 Aug 2025', used:'18 Oct 2025',
+    cert:'AI-SAF-25-0417', tripL:30, share:.2, rare:'Golden rare · first sustainable flight', harvested:true, x:1000, y:708, s:1.1 },
+  { id:'hnd', sp:'cherry', name:'Cherry blossom', city:'Tokyo', route:'DEL → HND', flight:'AI 358', date:'22 Nov 2025', used:'09 Jan 2026',
+    cert:'AI-SAF-25-1182', tripL:180, share:.1, harvested:true, x:430, y:712, s:1.15 },
+  { id:'lhr', sp:'oak', name:'English oak', city:'London', route:'DEL → LHR', flight:'AI 111', date:'03 Jan 2026', used:'19 Feb 2026',
+    cert:'AI-SAF-26-0038', tripL:260, share:.1, harvested:true, x:330, y:600, s:0.95 },
+  { id:'dxb', sp:'palm', name:'Date palm', city:'Dubai', route:'DEL → DXB', flight:'AI 915', date:'17 Feb 2026', used:'30 Mar 2026',
+    cert:'AI-SAF-26-0274', tripL:55, share:.2, harvested:true, x:1210, y:604, s:0.9 },
+  { id:'blr', sp:'banyan', name:'Banyan', city:'Bengaluru', route:'DEL → BLR', flight:'AI 503', date:'20 Nov 2026', used:null,
+    cert:'AI-SAF-26-0631', tripL:40, share:.2, harvested:false, isNew:true, x:720, y:740, s:1.4 }
+];
+TREES.forEach(t => t.litres = Math.round(t.tripL * t.share));
+const PLOTS = [[556,604],[190,616]];
+
+const byId = id => TREES.find(t => t.id === id);
+const apples = t => t.litres;
+const kgAvoided = l => l * KG_CO2_AVOIDED_PER_L;
+const totalL = () => TREES.reduce((n,t) => n + t.litres, 0);
+const tripCO2 = () => TREES.reduce((n,t) => n + t.tripL * KG_CO2_PER_L_FOSSIL, 0);
+const inr = n => '₹' + Math.round(n).toLocaleString('en-IN');
+const fmt = n => Math.round(n).toLocaleString('en-IN');
+
+const state = { step:0, apples:0, fare:'green', planted:false, spent:0 };
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------------- TREE ART ----------------
+   Seeded, layered canopies: a dark under-layer, a mid layer and a light top-left
+   highlight, so each species reads as a volume rather than a flat blob. */
+function rng(seed){ let s = seed % 2147483647 || 1; return () => (s = s * 16807 % 2147483647) / 2147483647; }
+function canopy(R, cx, cy, w, h, n, pal, rmin, rmax){
+  const pts = [];
+  for(let i=0;i<n;i++){
+    const a = R()*Math.PI*2, d = Math.sqrt(R());
+    pts.push([cx + Math.cos(a)*w*d, cy + Math.sin(a)*h*d, rmin + R()*(rmax-rmin)]);
+  }
+  pts.sort((p,q) => p[1]-q[1]);
+  let s = '';
+  pts.forEach(p => s += `<circle cx="${(p[0]+2).toFixed(1)}" cy="${(p[1]+6).toFixed(1)}" r="${p[2].toFixed(1)}" fill="${pal[0]}"/>`);
+  pts.forEach(p => s += `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="${(p[2]*.92).toFixed(1)}" fill="${pal[1]}"/>`);
+  pts.filter(p => p[1] < cy + h*.2 && p[0] < cx + w*.35).forEach(p =>
+    s += `<circle cx="${(p[0]-p[2]*.25).toFixed(1)}" cy="${(p[1]-p[2]*.3).toFixed(1)}" r="${(p[2]*.55).toFixed(1)}" fill="${pal[2]}"/>`);
+  pts.filter((p,i) => i%4===0 && p[1] < cy).forEach(p =>
+    s += `<circle cx="${(p[0]-p[2]*.35).toFixed(1)}" cy="${(p[1]-p[2]*.45).toFixed(1)}" r="${(p[2]*.22).toFixed(1)}" fill="${pal[3]}" opacity=".8"/>`);
+  return { svg:s, pts };
+}
+const PAL = {
+  banyan:{ leaf:['#2C5A36','#3E7A48','#6FA266','#B5D392'], trunk:'#6B4A33', root:'#87654A' },
+  gold:  { leaf:['#8E6A2C','#C9962F','#EBBE69','#FFF0C9'], trunk:'#7A5A2E', root:'#A07C3E' },
+  cherry:{ leaf:['#D97C90','#F2A9B9','#FAD3DC','#FFF4F6'], trunk:'#5A2E3A' },
+  oak:   { leaf:['#344F27','#4E7034','#7C9D50','#BFD08E'], trunk:'#5E4630' },
+  palm:  { leaf:['#255C3C','#3F7F50','#6FA866'], trunk:'#8A6238' }
+};
+function treeSVG(t, opts={}){
+  const R = rng(t.id.split('').reduce((n,c) => n*31 + c.charCodeAt(0), 7));
+  const rare = !!t.rare;
+  let s = '', spots = [];
+  if(t.sp === 'banyan'){
+    const p = rare ? PAL.gold : PAL.banyan;
+    s += `<path d="M-16 0 C-14 -26 -11 -56 -7 -86 L7 -86 C11 -56 14 -26 16 0 Z" fill="${p.trunk}"/>`;
+    s += `<path d="M-16 0 C-22 -2 -28 -1 -32 2 M16 0 C22 -2 28 -1 32 2" stroke="${p.trunk}" stroke-width="5" stroke-linecap="round" fill="none"/>`;
+    s += `<path d="M-4 -70 C-20 -84 -40 -92 -62 -98 M4 -72 C20 -86 40 -94 62 -100" stroke="${p.trunk}" stroke-width="6" stroke-linecap="round" fill="none"/>`;
+    [[-70,1.4],[-56,3.6],[-40,1.4],[-26,1.2],[24,1.2],[40,1.4],[54,3.4],[70,1.4]].forEach(([x,w]) => {
+      const top = -104 + R()*8, b = R()*6-3;
+      s += `<path d="M${x} ${top} C${x+b} ${top*.6} ${x-b} ${top*.3} ${x+b*.6} 0" stroke="${p.root}" stroke-width="${w}" fill="none" stroke-linecap="round" opacity=".9"/>`;
+    });
+    const c = canopy(R, 0, -124, 78, 30, 34, p.leaf, 13, 22); s += c.svg; spots = c.pts;
+  } else if(t.sp === 'cherry'){
+    const p = PAL.cherry;
+    s += `<path d="M-7 0 C-6 -30 -4 -54 0 -72 C4 -54 6 -30 7 0Z" fill="${p.trunk}"/>`;
+    s += `<g stroke="${p.trunk}" stroke-linecap="round" fill="none">
+      <path d="M0 -60 C-14 -78 -30 -90 -48 -104" stroke-width="5"/><path d="M0 -64 C14 -80 30 -92 46 -108" stroke-width="5"/>
+      <path d="M-2 -70 C-8 -92 -10 -112 -14 -128" stroke-width="4"/><path d="M2 -70 C10 -94 14 -114 18 -130" stroke-width="4"/>
+      <path d="M-30 -90 C-40 -92 -50 -88 -58 -84" stroke-width="2.5"/><path d="M28 -92 C38 -96 48 -94 56 -90" stroke-width="2.5"/></g>`;
+    const c = canopy(R, 0, -112, 64, 36, 46, p.leaf, 8, 15); s += c.svg; spots = c.pts;
+    for(let i=0;i<6;i++) s += `<ellipse cx="${(R()*120-60).toFixed(0)}" cy="${(-R()*40).toFixed(0)}" rx="2.6" ry="1.6" fill="#F2A9B9" transform="rotate(${(R()*90).toFixed(0)})" opacity=".85"/>`;
+  } else if(t.sp === 'oak'){
+    const p = PAL.oak;
+    s += `<path d="M-13 0 C-12 -24 -10 -46 -8 -66 L8 -66 C10 -46 12 -24 13 0Z" fill="${p.trunk}"/>`;
+    s += `<path d="M-6 -50 C-22 -62 -34 -70 -44 -80 M6 -54 C20 -66 32 -74 42 -84" stroke="${p.trunk}" stroke-width="6" stroke-linecap="round" fill="none"/>`;
+    const c = canopy(R, 0, -118, 62, 50, 40, p.leaf, 13, 21); s += c.svg; spots = c.pts;
+  } else { // date palm
+    const p = PAL.palm;
+    let rings = '';
+    for(let i=0;i<14;i++){
+      const f = i/14, x = 22*f*f, y = -150*f, w = 8 - f*2.4;
+      rings += `<path d="M${(x-w).toFixed(1)} ${y.toFixed(1)} L${(x+w).toFixed(1)} ${y.toFixed(1)} L${(x+w-0.6).toFixed(1)} ${(y-11).toFixed(1)} L${(x-w+0.6).toFixed(1)} ${(y-11).toFixed(1)}Z" fill="${i%2?'#7C5530':p.trunk}"/>`;
+    }
+    s += rings;
+    const tx = 22, ty = -152;
+    for(let i=0;i<11;i++){
+      const a = -Math.PI + (i/10)*Math.PI + (R()-.5)*.2, len = 62 + R()*18;
+      const ex = tx + Math.cos(a)*len, ey = ty + Math.sin(a)*len*.55 + 26;
+      const mx = tx + Math.cos(a)*len*.5, my = ty + Math.sin(a)*len*.5 - 16;
+      const col = p.leaf[i%3];
+      s += `<path d="M${tx} ${ty} Q${mx.toFixed(1)} ${(my-8).toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)} Q${(mx+4).toFixed(1)} ${(my+6).toFixed(1)} ${tx} ${ty}Z" fill="${col}"/>`;
+      s += `<path d="M${tx} ${ty} Q${mx.toFixed(1)} ${(my-1).toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)}" stroke="#1E4A30" stroke-width="1" fill="none" opacity=".6"/>`;
+    }
+    s += `<g fill="#B5651D">${[[16,-140],[22,-138],[28,-141],[19,-134],[25,-133]].map(([x,y]) => `<circle cx="${x}" cy="${y}" r="3.4"/>`).join('')}</g>`;
+    spots = [[0,-160,10]];
+  }
+  if(rare){
+    s += `<g fill="#FFF6D8">${[[-70,-150],[66,-140],[0,-176]].map(([x,y]) => `<path d="M${x} ${y-7} L${x+2} ${y-2} ${x+7} ${y} ${x+2} ${y+2} ${x} ${y+7} ${x-2} ${y+2} ${x-7} ${y} ${x-2} ${y-2}Z"/>`).join('')}</g>`;
+  }
+  return { svg:s, spots };
+}
+const thumb = (t, el) => { el.innerHTML = treeSVG(t).svg; };
+
+/* ---------------- GARDEN (one tree, Three.js) ---------------- */
+function drawGarden(){
+  const t = byId('blr');
+  Garden3D.sync({ planted: state.planted, ripe: state.planted && !t.harvested });
+  renderCollection();
+}
+function gardenPointerUp(dx, kind){
+  if(kind === 'cherry'){ openReceipt('hnd'); return; }
+  const t = byId('blr');
+  if(!state.planted) return;
+  if(t.harvested) openReceipt(t.id);
+  else shake(t, dx);
+}
+window.gardenPointerUp = gardenPointerUp;
+
+function shake(t, dx){
+  if(t.id !== 'blr' || t.harvested) return;
+  t.harvested = true;
+  document.getElementById('gardenHint').innerHTML = 'Harvested. Tap the banyan to see what it stands for.';
+  t._credited = 0;
+  renderCollection();
+  if(reduce){
+    addApples(apples(t));
+    t._credited = apples(t);
+    drawGarden();
+    return;
+  }
+  Garden3D.shake(dx || 0, flyFromScreen);
+  drawGarden();
+  setTimeout(() => {
+    const left = apples(t) - t._credited;
+    if(left > 0){ t._credited += left; addApples(left); }
+  }, 5000);
+}
+function flyFromScreen(x, y){
+  const target = document.getElementById('appleCount').getBoundingClientRect();
+  const tx = target.left + 12, ty = target.top + target.height/2 - 11;
+  const el = document.createElement('div'); el.className = 'fly';
+  el.innerHTML = '<svg viewBox="0 0 24 26" width="22" height="24"><use href="#apple" width="24" height="26"/></svg>';
+  document.body.appendChild(el);
+  const mx = (x + tx)/2, my = Math.min(y, ty) - 120;
+  const t = byId('blr');
+  el.animate([
+    { transform:`translate(${x-11}px,${y-11}px) scale(1)` },
+    { transform:`translate(${mx}px,${my}px) scale(1.15)`, offset:.45 },
+    { transform:`translate(${tx}px,${ty}px) scale(.6)`, opacity:.4 }
+  ], { duration:760, easing:'cubic-bezier(.45,0,.25,1)' }).onfinish = () => {
+    el.remove();
+    if(t._credited < apples(t)){ t._credited++; addApples(1); }
+  };
+}
+
+function addApples(n){
+  state.apples += n;
+  const c = document.getElementById('appleCount');
+  c.textContent = fmt(state.apples); c.classList.remove('bump'); void c.offsetWidth; c.classList.add('bump');
+  syncApples();
+}
+function syncApples(){
+  const n = state.apples - state.spent;
+  ['appleCount','mcApples','balN'].forEach(id => document.getElementById(id).textContent = fmt(n));
+  document.getElementById('hdrApples').textContent = fmt(n) + ' apples';
+  renderSpend();
+}
+
+/* ---------------- NUMBERS ---------------- */
+function renderImpact(){
+  const L = totalL(), kg = kgAvoided(L), km = kg / CAR_KG_PER_KM;
+  const trip = ROAD_TRIPS.reduce((b,r) => Math.abs(r[2]-km) < Math.abs(b[2]-km) ? r : b);
+  document.getElementById('co2Big').innerHTML = `${fmt(kg)} kg <small>of CO2 kept out of the air</small>`;
+  document.getElementById('co2Compare').textContent = `About the same as not driving a car from ${trip[0]} to ${trip[1]}.`;
+  document.getElementById('co2Share').textContent = `Your trees cut ${Math.round(kg / tripCO2() * 100)}% of the CO2 from these ${TREES.length} flights. Flying still has an impact.`;
+  const planet = kg / WORLD_CO2_KG_YEAR * 100;
+  const digits = planet > 0 ? Math.min(12, Math.max(2, Math.ceil(-Math.log10(planet)) + 1)) : 2;
+  document.getElementById('planetPct').textContent = planet.toFixed(digits) + '%';
+  const parts = WORLD_CO2_KG_YEAR / kg;
+  const big = parts >= 1e9 ? `${Math.round(parts / 1e9)} billion` : parts >= 1e6 ? `${Math.round(parts / 1e6)} million` : fmt(parts);
+  document.getElementById('planetLbl').textContent = `of this year's CO2 from the whole world. Small, but real: 1 part in ${big}.`;
+  document.getElementById('formula').innerHTML =
+    `<b>Fossil jet fuel</b> gives off 3.16 kg of CO2 per kg burned. At 0.8 kg per litre, that is 2.53 kg per litre.<br>` +
+    `<b>Sustainable fuel from used cooking oil</b> has about 80% lower lifecycle CO2, so each litre that replaces fossil fuel avoids about 2.0 kg.<br>` +
+    `<b>Your fares bought ${L} litres</b>: ${fmt(kg)} kg avoided. A petrol car gives off 0.17 kg per km, so that equals about ${fmt(km)} km of driving. ${trip[0]} to ${trip[1]} is about ${trip[2]} km by road.<br>` +
+    `<b>The share</b> compares this with the fuel your seat used on all ${TREES.length} flights.<br>` +
+    `<b>The planet</b> compares ${fmt(kg)} kg with about 37 billion tonnes of CO2 the world puts out in a year.<br>Figures in this prototype are illustrative.`;
+  document.getElementById('mcTrees').textContent = TREES.filter(t => !t.isNew || state.planted).length;
+  document.getElementById('mcTrips').textContent = TREES.length;
+}
+
+function renderFare(){
+  const t = byId('blr'), saf = t.litres * SAF_PREMIUM_RS_PER_L;
+  const base = 4560, tax = 920, val = base + tax, green = val + saf;
+  document.getElementById('valPrice').innerHTML = inr(val) + ' <small>per adult</small>';
+  document.getElementById('greenPrice').innerHTML = inr(green) + ' <small>per adult</small>';
+  const rows = [
+    ['M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M6 7h12v13H6z','Cabin bag','7 kg'],
+    ['M7 6h10a2 2 0 0 1 2 2v11H5V8a2 2 0 0 1 2-2Zm3 0V4h4v2','Check-in bag','15 kg'],
+    ['M6 4v9h12V4M4 13h16v3H4zM7 16v4M17 16v4','Seat','Standard seat, chargeable'],
+    ['M4 12a8 8 0 1 0 3-6.2M4 4v4h4','Date change','₹3,000 plus fare difference'],
+    ['M12 3l2.6 5.6 6 .8-4.4 4.2 1.1 6L12 16.8 6.7 19.6l1.1-6L3.4 9.4l6-.8Z','Maharaja Points','Earn on this flight']
+  ];
+  const html = rows.map(([d,k,v]) => `<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="${d}"/></svg><div>${k}<span>${v}</span></div></li>`).join('');
+  document.getElementById('inclValue').innerHTML = html;
+  document.getElementById('inclGreen').innerHTML = html;
+  document.getElementById('greenLitres').textContent = `${t.litres} litres of SAF (${inr(saf)} more)`;
+  document.getElementById('greenApples').textContent = `${apples(t)} apples`;
+  document.getElementById('greenApplesSub').textContent = `Worth ${inr(apples(t)*RS_PER_APPLE)} off your next sustainable fare`;
+  const g = state.fare === 'green';
+  document.getElementById('sBase').textContent = inr(base);
+  document.getElementById('sTax').textContent = inr(tax);
+  document.getElementById('sSaf').textContent = inr(saf);
+  document.getElementById('sSafRow').style.display = g ? '' : 'none';
+  document.getElementById('sEarn').style.display = g ? '' : 'none';
+  document.getElementById('sTotal').textContent = inr(g ? green : val);
+  document.getElementById('sApples').textContent = `${apples(t)} apples`;
+  document.getElementById('sApplesWorth').textContent = inr(apples(t)*RS_PER_APPLE);
+  document.querySelectorAll('.fare').forEach(f => f.classList.toggle('sel', f.dataset.fare === state.fare));
+}
+
+function renderStub(){
+  const t = byId('blr');
+  const mobile = document.getElementById('tabMobile').classList.contains('on');
+  document.getElementById('stub').innerHTML = `
+    <svg class="tree-thumb" viewBox="-100 -200 200 210">${treeSVG(t).svg}</svg>
+    <h4>Your banyan</h4><p>Native to Bengaluru · ${apples(t)} apples</p>
+    ${mobile
+      ? `<button class="btn btn-primary btn-block" style="margin-top:14px" disabled>Plant this tree</button>
+         <div class="lockline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Unlocks when AI 503 lands</div>`
+      : `<svg class="qr" viewBox="0 0 104 104" id="qr"></svg><p style="margin-top:8px">Scan with your phone after you land to plant it.</p>`}`;
+  if(!mobile) drawQR();
+}
+function drawQR(){
+  const N = 25, sz = 3.7, off = 5.75; let seed = 20261120;
+  const r = () => (seed = (seed*1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
+  const inF = (x,y) => (x<8&&y<8)||(x>=N-8&&y<8)||(x<8&&y>=N-8);
+  let c = '<rect width="104" height="104" fill="#fff"/>';
+  for(let y=0;y<N;y++) for(let x=0;x<N;x++) if(!inF(x,y) && r() > .52) c += `<rect x="${off+x*sz}" y="${off+y*sz}" width="${sz}" height="${sz}" fill="#25272C"/>`;
+  [[0,0],[N-7,0],[0,N-7]].forEach(([fx,fy]) => {
+    c += `<rect x="${off+fx*sz+sz/2}" y="${off+fy*sz+sz/2}" width="${6*sz}" height="${6*sz}" fill="none" stroke="#25272C" stroke-width="${sz}"/>
+          <rect x="${off+(fx+2)*sz}" y="${off+(fy+2)*sz}" width="${3*sz}" height="${3*sz}" fill="#25272C"/>`;
+  });
+  c += `<rect x="40" y="40" width="24" height="24" rx="5" fill="#fff"/><rect x="43" y="43" width="18" height="18" rx="4" fill="#DA0E29"/>`;
+  document.getElementById('qr').innerHTML = c;
+}
+
+function renderCollection(){
+  const planted = TREES.filter(t => !t.isNew || state.planted);
+  document.getElementById('collCount').textContent = `${planted.length} trees · ${PLOTS.length} plots free`;
+  document.getElementById('collList').innerHTML = [...planted].reverse().map(t =>
+    `<button class="chip${t.rare ? ' rare' : ''}${!t.harvested ? ' ripe' : ''}" data-receipt="${t.id}" title="${t.name}, ${t.city}">
+      <svg viewBox="-100 -200 200 210">${treeSVG(t).svg}</svg></button>`).join('') +
+    PLOTS.map(() => `<button class="chip empty" title="Book a sustainable fare to plant here" onclick="go(0)">+</button>`).join('');
+  document.querySelectorAll('#collList [data-receipt]').forEach(b => b.addEventListener('click', () => openReceipt(b.dataset.receipt)));
+}
+
+/* ---------------- RECEIPT DRAWER ---------------- */
+function openReceipt(id){
+  const t = byId(id), kg = kgAvoided(t.litres);
+  const pending = !t.used;
+  document.getElementById('drawerBody').innerHTML = `
+    <div class="rc-hero">
+      <svg viewBox="-100 -200 200 210">${treeSVG(t).svg}</svg>
+      <div class="txt">${t.rare ? `<span class="tag tag-gold">${t.rare}</span>` : `<span class="tag tag-grey">Native to ${t.city}</span>`}
+        <h3>${t.name}</h3><p>${t.route} · ${t.flight} · ${t.date}</p></div>
+    </div>
+    <div class="rc-stats">
+      <div><b>${t.litres}</b><span>litres of SAF</span></div>
+      <div><b>${apples(t)}</b><span>apples</span></div>
+      <div><b>${kg.toFixed(1)}</b><span>kg CO2 avoided</span></div>
+    </div>
+    <div class="rc-sec">
+      <div class="h3" style="margin:8px 0 4px">What your fare paid for</div>
+      <div class="kv"><span>Fuel</span><b>Sustainable aviation fuel</b></div>
+      <div class="kv"><span>Made from</span><b>Used cooking oil (HEFA)</b></div>
+      <div class="kv"><span>Amount</span><b>${t.litres} litres, ${(t.share*100).toFixed(0)}% of your seat's fuel</b></div>
+      <div class="kv"><span>Certificate</span><b>${t.cert}</b></div>
+    </div>
+    <div class="rc-sec">
+      <div class="h3" style="margin:12px 0 4px">Where it is now</div>
+      <ul class="timeline">
+        <li><span class="dot">✓</span><div>Bought for your booking<span>${t.date}</span></div></li>
+        <li class="${pending ? 'wait' : ''}"><span class="dot">${pending ? '…' : '✓'}</span><div>${pending ? 'Waiting to be used' : 'Used on Air India flights'}<span>${pending ? 'Due by May 2027. We will update this receipt.' : t.used}</span></div></li>
+      </ul>
+    </div>
+    <p class="plain">This tree is a symbol, not a tree in the ground. It stands for the fuel your fare paid for. The fuel goes into Air India's supply and is used on our network within six months. It was not necessarily in your plane.</p>`;
+  document.getElementById('drawerFt').innerHTML = `
+    <button class="btn btn-outline">Download certificate</button>
+    ${!t.harvested && state.planted ? `<button class="btn btn-primary" onclick="closeReceipt();shake(byId('${t.id}'),0)">Shake for apples</button>` : ''}`;
+  document.body.classList.add('drawer-open');
+  document.getElementById('drawer').classList.add('on');
+  document.getElementById('scrim').classList.add('on');
+  state.receiptOpen = true;
+  if(state.step !== 4 && document.getElementById('p-garden').classList.contains('on')) setStep(4, false);
+}
+function closeReceipt(){
+  document.body.classList.remove('drawer-open');
+  document.getElementById('drawer').classList.remove('on');
+  document.getElementById('scrim').classList.remove('on');
+  if(state.step === 4) setStep(3, false);
+}
+
+/* ---------------- SPEND ---------------- */
+const PERKS = { points:null, bag:30, meal:20 };
+function renderSpend(){
+  const n = state.apples - state.spent, next = byId('blr').litres * SAF_PREMIUM_RS_PER_L;
+  const off = n * RS_PER_APPLE;
+  document.getElementById('balWorth').textContent = fmt(n * POINTS_PER_APPLE);
+  document.getElementById('heroAmt').textContent = inr(off);
+  document.getElementById('heroCopy').textContent =
+    `A sustainable fare on a route like Delhi to Bengaluru costs about ${inr(next)} more than the Value fare. Your apples cover ${Math.min(100, Math.round(off/next*100))}% of that.`;
+  document.getElementById('meterFill').style.width = Math.min(100, off/next*100) + '%';
+  document.getElementById('meterL').textContent = `${inr(off)} from apples`;
+  document.getElementById('meterR').textContent = `${inr(next)} extra on your next fare`;
+  document.querySelector('[data-perk="points"]').textContent = `Convert ${fmt(n)} apples`;
+}
+function setupSpend(){
+  document.getElementById('heroBtn').addEventListener('click', e => { e.target.disabled = true; document.getElementById('heroDone').classList.add('on'); });
+  document.querySelectorAll('[data-perk]').forEach(b => b.addEventListener('click', () => {
+    const k = b.dataset.perk, n = state.apples - state.spent, cost = PERKS[k] ?? n;
+    const note = document.querySelector(`[data-done="${k}"]`);
+    if(cost > n || n === 0){ note.textContent = 'Not enough apples yet.'; note.style.color = 'var(--red)'; note.classList.add('on'); return; }
+    state.spent += cost; syncApples();
+    note.style.color = ''; note.classList.add('on');
+    note.textContent = k === 'points' ? `✓ ${fmt(cost*POINTS_PER_APPLE)} Maharaja Points added` : k === 'bag' ? '✓ 5 kg added to your next booking' : '✓ Meal upgrade added to your next booking';
+    if(k === 'points'){ const p = document.getElementById('mcPoints'); p.textContent = fmt(12480 + cost*POINTS_PER_APPLE); }
+  }));
+}
+
+/* ---------------- NAVIGATION ----------------
+   Steps: 0 fare, 1 boarding pass, 2 landed, 3 garden, 4 garden + receipt, 5 spend. */
+const PAGE_FOR = ['p-fare','p-pass','p-trips','p-garden','p-garden','p-spend'];
+function setStep(i, scroll = true){
+  state.step = i;
+  document.querySelectorAll('.presenter [data-step]').forEach(b => b.classList.toggle('on', +b.dataset.step === i));
+  document.getElementById('prevBtn').disabled = i === 0;
+  document.getElementById('nextBtn').disabled = i === 5;
+  document.querySelectorAll('.mainnav a').forEach(a => a.classList.toggle('on',
+    (a.dataset.nav === 'book' && i <= 2) || (a.dataset.nav === 'club' && i >= 3)));
+}
+function go(i, opts = {}){
+  i = Math.max(0, Math.min(5, i));
+  const page = PAGE_FOR[i];
+  document.querySelectorAll('.page').forEach(p => p.classList.toggle('on', p.id === page));
+  document.body.classList.toggle('full', page === 'p-garden');
+  if(page === 'p-garden') requestAnimationFrame(() => Garden3D.resize());
+  if(i !== 4) closeReceiptSilently();
+  setStep(i);
+  window.scrollTo({ top:0 });
+  const toast = document.getElementById('toast');
+  toast.classList.remove('show');
+  if(i === 2) setTimeout(() => toast.classList.add('show'), 500);
+  if(i >= 3 && !state.planted && !opts.noPlant) plant(false);
+  if(i === 4) openReceipt(opts.tree || 'blr');
+  if(i === 5) renderSpend();
+  if(i <= 1) sessionStorage.setItem('ai-garden-booking', String(i));
+  else sessionStorage.removeItem('ai-garden-booking');
+}
+function closeReceiptSilently(){
+  document.body.classList.remove('drawer-open');
+  document.getElementById('drawer').classList.remove('on');
+  document.getElementById('scrim').classList.remove('on');
+}
+function plant(animate){
+  state.planted = true;
+  drawGarden(); renderImpact();
+  if(animate && !reduce) Garden3D.grow();
+}
+function plantNow(){ go(3, { noPlant:true }); plant(true); }
+
+function setupNav(){
+  document.querySelectorAll('.presenter [data-step]').forEach(b => b.addEventListener('click', () => go(+b.dataset.step)));
+  document.getElementById('prevBtn').addEventListener('click', () => go(state.step - 1));
+  document.getElementById('nextBtn').addEventListener('click', () => go(state.step + 1));
+  document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => go(+b.dataset.go)));
+  document.addEventListener('keydown', e => {
+    if(e.target.closest('.tree')) return;
+    if(e.key === 'ArrowRight') go(state.step + 1);
+    if(e.key === 'ArrowLeft') go(state.step - 1);
+    if(e.key === 'Escape') closeReceipt();
+  });
+  document.getElementById('scrim').addEventListener('click', closeReceipt);
+  document.getElementById('drawerClose').addEventListener('click', closeReceipt);
+  document.querySelectorAll('.fare').forEach(f => f.addEventListener('click', () => { state.fare = f.dataset.fare; renderFare(); }));
+  document.getElementById('continueBtn').addEventListener('click', () => go(1));
+  ['tabPaper','tabMobile'].forEach(id => document.getElementById(id).addEventListener('click', () => {
+    document.getElementById('tabPaper').classList.toggle('on', id === 'tabPaper');
+    document.getElementById('tabMobile').classList.toggle('on', id === 'tabMobile');
+    renderStub();
+  }));
+  document.getElementById('plantBtn').addEventListener('click', plantNow);
+  document.querySelectorAll('#p-trips [data-receipt]').forEach(b => b.addEventListener('click', () => { go(3); openReceipt(b.dataset.receipt); }));
+}
+
+/* ---------------- INIT ---------------- */
+function playEarth(){
+  const layer = document.getElementById('earthIntro');
+  layer.classList.add('on');
+  const globe = Earth3D.mount(document.getElementById('earthStage'), { mode:'intro', duration:2400 });
+  setTimeout(() => {
+    layer.classList.add('go');
+    setTimeout(() => { layer.classList.remove('on', 'go'); globe.dispose(); }, 620);
+  }, 2600);
+}
+function bootGarden(){
+  state.apples = TREES.filter(t => t.harvested).reduce((n,t) => n + apples(t), 0);
+  Garden3D.mount(document.getElementById('garden3d'), apples(byId('blr')));
+  thumb(byId('blr'), document.getElementById('sumTree'));
+  thumb(byId('blr'), document.getElementById('tripTree'));
+  thumb(byId('dxb'), document.getElementById('tripTree2'));
+  renderFare(); renderStub(); drawGarden(); renderImpact(); setupSpend(); setupNav(); syncApples();
+  Earth3D.mount(document.getElementById('planetGlobe'), { mode:'badge' });
+  const saved = sessionStorage.getItem('ai-garden-booking');
+  go(saved != null ? +saved : 0);
+  if(saved != null && !reduce) playEarth();
+}
+bootGarden();
+</script>
+</body>
+</html>

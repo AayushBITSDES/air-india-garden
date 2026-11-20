@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Air India garden jury deck</title>
+
+<!--
+  Air India sustainable-fare garden. Five slides for a design jury.
+
+  Layout language copied from the author's pistonbooks deck:
+  exactly two flat colours, one ground and one accent used for all type,
+  one giant lowercase word ending in a full stop per slide,
+  the word anchoring a corner, body copy held to that same side,
+  large areas of empty space, no cards or panels.
+
+  Type: Air India Sans is proprietary. Montserrat (Google Fonts) stands in for it,
+  set heavy and tight for the display words. A close free substitute for the
+  brand's wide geometric sans, not the real thing.
+
+  Numbers used in the copy come from the brief's single visible formula:
+  fossil jet fuel ~3.16 kg CO2 per kg at ~0.8 kg per litre gives ~2.5 kg CO2 per litre.
+  HEFA SAF from used cooking oil is ~80% lower lifecycle CO2, so 1 litre replacing
+  fossil fuel avoids ~2.0 kg CO2. A petrol car is ~0.17 kg CO2 per km, Delhi to
+  Jaipur ~280 km. The headline example is quoted exactly as the brief gives it.
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
+
+<style>
+/* === BASE === */
+:root{
+  /* The only two colours. Everything, including the dots, uses these. */
+  --ground:#5B1A55;  /* Air India aubergine */
+  --ink:#E6B55C;     /* Air India gold, all type */
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+html{background:var(--ground)}
+body{
+  margin:0;
+  overflow:hidden;
+  background:var(--ground);
+  color:var(--ink);
+  display:grid;
+  place-items:center;
+  font-family:'Montserrat','Arial',sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* === STAGE AND SLIDES === */
+/* A fixed 16:9 stage. The matching body colour makes any letterbox invisible. */
+.stage{
+  position:relative;
+  width:min(100vw,177.7778vh);
+  height:min(100vh,56.25vw);
+  container-type:inline-size;
+  overflow:hidden;
+  background:var(--ground);
+}
+.slide{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  display:none;
+}
+.slide.active{display:block}
+
+/* === TYPOGRAPHY === */
+.word{
+  position:absolute;
+  margin:0;
+  white-space:nowrap;
+  font-size:clamp(3rem,var(--wf),22rem);
+  line-height:.9;
+  letter-spacing:-.045em;
+  font-weight:800;
+}
+.body{
+  position:absolute;
+  width:46cqw;
+  max-height:78%;
+  overflow:hidden;
+  font-size:clamp(.9rem,1.75cqw,2.2rem);
+  line-height:1.3;
+  letter-spacing:.002em;
+  font-weight:500;
+}
+.body p{margin:0 0 1.1em}
+.body p:last-child{margin-bottom:0}
+
+/* === CORNERS === */
+/* Word in a corner, copy on that same side, pushed toward the far edge. */
+.slide[data-corner="tl"] .word{top:6%;left:6%;text-align:left}
+.slide[data-corner="tr"] .word{top:6%;right:6%;text-align:right}
+.slide[data-corner="br"] .word{bottom:6%;right:6%;text-align:right}
+.slide[data-corner="bl"] .word{bottom:6%;left:6%;text-align:left}
+
+.slide[data-corner="tl"] .body{top:46%;left:6%;text-align:left}
+.slide[data-corner="tr"] .body{top:46%;right:6%;text-align:right}
+.slide[data-corner="br"] .body{top:8%;right:6%;text-align:right}
+.slide[data-corner="bl"] .body{top:8%;left:6%;text-align:left}
+
+/* === NAVIGATION === */
+.nav{
+  position:absolute;
+  bottom:2.6%;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:clamp(.5rem,1cqw,1rem);
+  z-index:2;
+}
+.dot{
+  width:clamp(.45rem,.72cqw,1rem);
+  height:clamp(.45rem,.72cqw,1rem);
+  padding:0;
+  border:1px solid var(--ink);
+  border-radius:50%;
+  background:transparent;
+  cursor:pointer;
+}
+.dot.on{background:var(--ink)}
+.dot:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+
+/* === MOTION === */
+.word,.body{
+  opacity:0;
+  transform:translateY(clamp(8px,1.5cqw,20px));
+  transition:opacity .6s ease,transform .6s ease;
+}
+.slide.active .word{opacity:1;transform:none;transition-delay:.05s}
+.slide.active .body{opacity:1;transform:none;transition-delay:.18s}
+
+/* === SHORT VIEWPORTS === */
+@media (max-height:700px){
+  .body{font-size:clamp(.82rem,1.6cqw,2rem)}
+}
+@media (max-height:600px){
+  .body{font-size:clamp(.74rem,1.4cqw,1.7rem);max-height:72%}
+  .slide[data-corner="tl"] .body,
+  .slide[data-corner="tr"] .body{top:42%}
+}
+@media (max-height:500px){
+  .body{font-size:clamp(.66rem,1.2cqw,1.4rem);line-height:1.24;max-height:66%}
+  .slide[data-corner="tl"] .body,
+  .slide[data-corner="tr"] .body{top:38%}
+}
+@media (prefers-reduced-motion:reduce){
+  .word,.body{transition:none;transform:none;opacity:1}
+}
+</style>
+</head>
+<body>
+<main class="stage" aria-label="Air India garden jury deck">
+
+  <!-- 1. Problem. Word top left, copy below it on the left. -->
+  <section class="slide active" data-corner="tl" aria-hidden="false">
+    <h1 class="word" style="--wf:20cqw">why.</h1>
+    <div class="body">
+      <p>The sustainable fare costs more, and next to a cheaper fare it usually loses. A price gap alone will not change that, so the fare needs a reward you can see and keep.</p>
+      <p>The timing is right. Air India and Airbus announced India's first voluntary corporate SAF programme on 17 November 2026. India plans a 1% SAF blending mandate from 2027. This is the passenger version of that shift.</p>
+    </div>
+  </section>
+
+  <!-- 2. Idea. Word top right, copy below it on the right. -->
+  <section class="slide" data-corner="tr" aria-hidden="true">
+    <h2 class="word" style="--wf:17cqw">grow.</h2>
+    <div class="body">
+      <p>Book the sustainable fare and a tree appears on your boarding pass. Paper gets a QR code. Mobile gets a "Plant this tree" button. It unlocks when you land. A cancelled trip never grows a tree.</p>
+      <p>One tree stands for one booking's SAF. It is a symbol, not a planted sapling, and the receipt says so. That keeps the reward honest while giving the extra cost something to show for itself.</p>
+    </div>
+  </section>
+
+  <!-- 3. Collect. Word bottom right, copy above it on the right. -->
+  <section class="slide" data-corner="br" aria-hidden="true">
+    <h2 class="word" style="--wf:13cqw">gather.</h2>
+    <div class="body">
+      <p>The species comes from where you flew. Banyan in Mumbai, cherry blossom in Tokyo. Rarity comes from occasions you earn, a first sustainable flight, Diwali, your tenth flight, a new route. Nothing is random.</p>
+      <p>Size and apple count follow the SAF you actually bought. Longer flight, bigger tree, more apples. Shake once and every apple falls. Then the tree becomes a collection piece. Empty plots invite the next booking, so a small garden is fine.</p>
+    </div>
+  </section>
+
+  <!-- 4. Proof. Word bottom left, copy above it on the left. -->
+  <section class="slide" data-corner="bl" aria-hidden="true">
+    <h2 class="word" style="--wf:13cqw">honest.</h2>
+    <div class="body">
+      <p>The fare buys a fixed extra quantity of SAF, used somewhere on Air India's network within about six months. Not necessarily in your plane. Lufthansa lost in court over that claim and renamed Green Fares to Impact Fares. The receipt says litres, feedstock, the date used and a certificate reference. It never says your plane.</p>
+      <p>Rarity never changes the impact claim. The headline is an everyday comparison: your garden kept 140 kg of CO2 out of the air, about the same as not driving a car from Delhi to Varanasi. One small line under it gives your share: your trees cut 10% of the CO2 from those flights. It never calls a flight carbon neutral. (Numbers are illustrative.)</p>
+    </div>
+  </section>
+
+  <!-- 5. Loop. Word returns to top left, copy below it on the left. -->
+  <section class="slide" data-corner="tl" aria-hidden="true">
+    <h2 class="word" style="--wf:15cqw">again.</h2>
+    <div class="body">
+      <p>Apples are only earned on sustainable fares. One apple converts to 10 Maharaja Points, or takes 20 rupees off your next sustainable fare. They also buy extra baggage or a meal upgrade.</p>
+      <p>Money off the next sustainable fare is the headline perk. It closes the loop, so the reward leads back to the choice we wanted in the first place. Next is the <a href="../prototype/index.html" style="color:inherit">clickable prototype</a>, which walks the flow: booking, boarding pass, landing, garden, receipt, spend.</p>
+    </div>
+  </section>
+
+  <nav class="nav" aria-label="Slide navigation">
+    <button class="dot on" aria-label="Slide 1" aria-current="true"></button>
+    <button class="dot" aria-label="Slide 2" aria-current="false"></button>
+    <button class="dot" aria-label="Slide 3" aria-current="false"></button>
+    <button class="dot" aria-label="Slide 4" aria-current="false"></button>
+    <button class="dot" aria-label="Slide 5" aria-current="false"></button>
+  </nav>
+</main>
+
+<script>
+/* === SLIDE CONTROLS === */
+const slides = Array.from(document.querySelectorAll('.slide'));
+const dots = Array.from(document.querySelectorAll('.dot'));
+let current = 0;
+
+function go(n){
+  current = (n + slides.length) % slides.length;
+  slides.forEach((slide, k) => {
+    const active = k === current;
+    slide.classList.toggle('active', active);
+    slide.setAttribute('aria-hidden', String(!active));
+  });
+  dots.forEach((dot, k) => {
+    const active = k === current;
+    dot.classList.toggle('on', active);
+    dot.setAttribute('aria-current', String(active));
+  });
+}
+
+document.addEventListener('keydown', (e) => {
+  if (['ArrowRight','ArrowDown','PageDown',' '].includes(e.key)){
+    e.preventDefault();
+    go(current + 1);
+  } else if (['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){
+    e.preventDefault();
+    go(current - 1);
+  } else if (e.key === 'Home'){
+    go(0);
+  } else if (e.key === 'End'){
+    go(slides.length - 1);
+  }
+});
+
+dots.forEach((dot, k) => dot.addEventListener('click', () => go(k)));
+go(0);
+</script>
+</body>
+</html>
